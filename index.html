@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TheWebBuddy — Your Free Website Buddy</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --brand: #fe6e53;
+  --dark: #600203;
+  --ink: #1a0a09;
+  --ink2: #3d1a18;
+  --gray: #6b7280;
+  --gray2: #9ca3af;
+  --border: #e8e3e2;
+  --bg: #ffffff;
+  --bg2: #fdf8f7;
+  --bg3: #faf4f3;
+}
+
+html { scroll-behavior: smooth; font-size: 15px; }
+body { font-family: 'Bricolage Grotesque', sans-serif; background: var(--bg); color: var(--ink); overflow-x: hidden; cursor: none; -webkit-font-smoothing: antialiased; }
+
+/* CURSOR */
+.cur { position: fixed; top: 0; left: 0; width: 7px; height: 7px; background: var(--brand); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .2s, height .2s; }
+.cur-ring { position: fixed; top: 0; left: 0; width: 30px; height: 30px; border: 1px solid rgba(254,110,83,0.4); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all .12s ease; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.4rem 5vw;
+  transition: all .4s ease;
+  background: rgba(255,255,255,0);
+}
+nav.stuck {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 5vw;
+  box-shadow: 0 1px 20px rgba(26,10,9,0.05);
+}
+.nav-logo { font-size: 1.15rem; font-weight: 800; letter-spacing: -.025em; color: var(--ink); text-decoration: none; }
+.nav-logo span { color: var(--brand); }
+.nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+.nav-links a { font-size: .78rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--gray); text-decoration: none; transition: color .3s; }
+.nav-links a:hover { color: var(--ink); }
+.nav-pill { background: var(--brand) !important; color: #fff !important; padding: .5rem 1.2rem !important; border-radius: 6px !important; letter-spacing: .04em !important; font-weight: 600 !important; transition: background .3s, transform .2s !important; }
+.nav-pill:hover { background: var(--dark) !important; transform: translateY(-1px) !important; }
+
+/* HERO */
+.hero {
+  min-height: 100svh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 9rem 5vw 6rem;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* subtle grid */
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.5;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
+}
+
+/* brand glow */
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(254,110,83,0.08) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -55%);
+  pointer-events: none;
+}
+
+.hero-inner {
+  position: relative; z-index: 10;
+  max-width: 760px;
+  text-align: center;
+}
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: .45rem;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: .3rem .9rem;
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: up .8s .1s cubic-bezier(.16,1,.3,1) forwards;
+}
+.tag-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--brand); animation: blink 2s ease infinite; }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+.hero-h1 {
+  font-size: clamp(2.6rem, 6.5vw, 5rem);
+  font-weight: 800;
+  line-height: .96;
+  letter-spacing: -.04em;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: up .8s .18s cubic-bezier(.16,1,.3,1) forwards;
+}
+.hero-h1 .l1 { display: block; color: var(--ink); }
+.hero-h1 .l2 { display: block; color: var(--brand); }
+.hero-h1 .l3 {
+  display: block;
+  -webkit-text-stroke: 1.5px rgba(26,10,9,0.15);
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-sub {
+  font-size: .95rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--gray);
+  max-width: 460px;
+  margin: 0 auto 2.5rem;
+  opacity: 0;
+  animation: up .8s .26s cubic-bezier(.16,1,.3,1) forwards;
+}
+
+.hero-btns {
+  display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap;
+  opacity: 0;
+  animation: up .8s .34s cubic-bezier(.16,1,.3,1) forwards;
+}
+.btn-p {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: var(--brand); color: #fff;
+  padding: .75rem 1.75rem;
+  border-radius: 6px;
+  font-size: .85rem; font-weight: 600;
+  text-decoration: none;
+  transition: all .25s;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  letter-spacing: -.01em;
+}
+.btn-p:hover { background: var(--dark); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(254,110,83,0.2); }
+.btn-s {
+  display: inline-flex; align-items: center; gap: .5rem;
+  border: 1px solid var(--border); color: var(--gray);
+  padding: .75rem 1.75rem;
+  border-radius: 6px;
+  font-size: .85rem; font-weight: 500;
+  text-decoration: none;
+  transition: all .25s;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  background: var(--bg);
+}
+.btn-s:hover { border-color: var(--brand); color: var(--brand); }
+
+.hero-scroll {
+  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: .4rem;
+  z-index: 10;
+  opacity: 0;
+  animation: up .8s .6s cubic-bezier(.16,1,.3,1) forwards;
+}
+.scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--brand), transparent); animation: scrl 2.4s ease-in-out infinite; }
+.scroll-lbl { font-size: .6rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gray2); }
+@keyframes scrl { 0%{transform:scaleY(0);transform-origin:top;} 50%{transform:scaleY(1);transform-origin:top;} 51%{transform:scaleY(1);transform-origin:bottom;} 100%{transform:scaleY(0);transform-origin:bottom;} }
+@keyframes up { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;} }
+
+/* TICKER */
+.ticker {
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  padding: .8rem 0;
+}
+.ticker-track { display: flex; animation: tick 32s linear infinite; white-space: nowrap; }
+.ticker-item { display: flex; align-items: center; gap: 2rem; padding-right: 2rem; font-size: .72rem; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--gray2); flex-shrink: 0; }
+.sep { width: 3px; height: 3px; border-radius: 50%; background: var(--brand); flex-shrink: 0; }
+@keyframes tick { from{transform:translateX(0);}to{transform:translateX(-50%);} }
+
+/* SHARED */
+.sec { padding: 7rem 5vw; }
+.sec-inner { max-width: 1160px; margin: 0 auto; }
+
+.sec-tag {
+  display: inline-flex; align-items: center; gap: .6rem;
+  font-size: .68rem; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--brand);
+  margin-bottom: 1rem;
+}
+.sec-tag::before { content: ''; width: 18px; height: 1px; background: var(--brand); }
+
+.sec-h {
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -.035em;
+  color: var(--ink);
+}
+.sec-h em { font-style: italic; font-weight: 300; color: var(--brand); }
+
+/* REVEAL */
+.rv { opacity: 0; transform: translateY(22px); transition: opacity .75s cubic-bezier(.16,1,.3,1), transform .75s cubic-bezier(.16,1,.3,1); }
+.rv.on { opacity: 1; transform: none; }
+.d1{transition-delay:.08s;}.d2{transition-delay:.16s;}.d3{transition-delay:.24s;}.d4{transition-delay:.32s;}
+
+/* HOW IT WORKS */
+.how { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.how-head { margin-bottom: 3.5rem; }
+.how-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; border: 1px solid var(--border); }
+.step {
+  padding: 2.5rem 2.25rem;
+  border-right: 1px solid var(--border);
+  position: relative; overflow: hidden;
+  transition: background .3s;
+  background: var(--bg);
+}
+.step:last-child { border-right: none; }
+.step:hover { background: var(--bg3); }
+.step-n { font-size: 4rem; font-weight: 800; line-height: 1; color: rgba(254,110,83,0.08); position: absolute; top: 1.25rem; right: 1.75rem; letter-spacing: -.05em; }
+.step-icon { width: 38px; height: 38px; border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: 1.5rem; background: var(--bg); transition: all .3s; }
+.step:hover .step-icon { border-color: var(--brand); background: var(--brand); }
+.step-title { font-size: 1rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: .5rem; color: var(--ink); }
+.step-desc { font-size: .83rem; line-height: 1.72; color: var(--gray); font-weight: 300; }
+
+/* PRICING */
+.pricing { background: var(--bg); }
+.pricing-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem; }
+.pricing-sub { font-size: .83rem; font-weight: 300; color: var(--gray); line-height: 1.7; max-width: 300px; margin-bottom: 1.25rem; }
+.ctog { display: inline-flex; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: .2rem; }
+.cbtn { padding: .38rem .9rem; border-radius: 6px; border: none; font-family: 'Bricolage Grotesque', sans-serif; font-size: .74rem; font-weight: 600; cursor: pointer; background: transparent; color: var(--gray); transition: all .25s; letter-spacing: .04em; }
+.cbtn.on { background: var(--brand); color: #fff; }
+
+.p-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; border: 1px solid var(--border); }
+.pc {
+  padding: 2rem 1.75rem;
+  border-right: 1px solid var(--border);
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  position: relative;
+  transition: background .3s;
+}
+.pc:last-child { border-right: none; }
+.pc:hover { background: var(--bg3); }
+.pc.feat { background: var(--ink); border-color: var(--ink); }
+.pc.feat:hover { background: var(--dark); }
+.feat-lbl { position: absolute; top: 1.25rem; right: 1.25rem; font-size: .58rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; background: var(--brand); color: #fff; padding: .2rem .55rem; border-radius: 4px; }
+.p-name { font-size: .65rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: var(--brand); margin-bottom: 1rem; }
+.p-price { font-size: 2.4rem; font-weight: 800; line-height: 1; letter-spacing: -.05em; color: var(--ink); margin-bottom: .2rem; }
+.pc.feat .p-price { color: #fff; }
+.p-per { font-size: .75rem; color: var(--gray2); margin-bottom: 1.25rem; font-weight: 300; }
+.pc.feat .p-per { color: rgba(253,246,244,0.4); }
+.p-free { display: inline-flex; align-items: center; gap: .28rem; font-size: .63rem; font-weight: 700; letter-spacing: .05em; color: var(--brand); border: 1px solid rgba(254,110,83,0.22); padding: .18rem .6rem; border-radius: 4px; margin-bottom: 1.5rem; background: rgba(254,110,83,0.04); }
+.p-feats { list-style: none; flex: 1; margin-bottom: 1.5rem; }
+.p-feats li { display: flex; align-items: flex-start; gap: .55rem; font-size: .79rem; color: var(--gray); padding: .45rem 0; border-bottom: 1px solid var(--border); font-weight: 300; line-height: 1.5; }
+.pc.feat .p-feats li { color: rgba(253,246,244,0.5); border-color: rgba(253,246,244,0.07); }
+.p-feats li:last-child { border: none; }
+.ck { color: var(--brand); flex-shrink: 0; font-size: .78rem; margin-top: 2px; }
+.p-btn { width: 100%; padding: .72rem; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--gray); font-family: 'Bricolage Grotesque', sans-serif; font-size: .8rem; font-weight: 600; cursor: pointer; transition: all .25s; }
+.p-btn:hover { background: var(--brand); border-color: var(--brand); color: #fff; }
+.pc.feat .p-btn { background: var(--brand); border-color: var(--brand); color: #fff; }
+.pc.feat .p-btn:hover { background: #fff; border-color: #fff; color: var(--dark); }
+
+/* SERVICES */
+.services { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.svc-head { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: end; margin-bottom: 3.5rem; }
+.svc-aside { font-size: .87rem; font-weight: 300; color: var(--gray); line-height: 1.78; }
+.svc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; border: 1px solid var(--border); }
+.svc {
+  background: var(--bg);
+  padding: 2.25rem 2rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  position: relative; overflow: hidden;
+  transition: background .3s;
+}
+.svc:nth-child(3n) { border-right: none; }
+.svc:nth-child(n+4) { border-bottom: none; }
+.svc:hover { background: var(--bg3); }
+.svc::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--brand); transform: scaleX(0); transform-origin: left; transition: transform .4s cubic-bezier(.16,1,.3,1); }
+.svc:hover::after { transform: scaleX(1); }
+.svc-ico { font-size: 1.5rem; margin-bottom: 1.25rem; display: block; }
+.svc-title { font-size: .95rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: .45rem; color: var(--ink); }
+.svc-desc { font-size: .8rem; line-height: 1.72; color: var(--gray); font-weight: 300; margin-bottom: 1.25rem; }
+.svc-price { font-size: .7rem; font-weight: 700; color: var(--brand); letter-spacing: .04em; }
+
+/* WHY */
+.why { background: var(--bg); }
+.why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+.why-body { font-size: .87rem; font-weight: 300; color: var(--gray); line-height: 1.82; margin: 1.25rem 0 2.5rem; }
+.why-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; padding-top: .5rem; }
+.ws { padding: 1.5rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg2); }
+.ws-n { font-size: 2.2rem; font-weight: 800; color: var(--brand); line-height: 1; letter-spacing: -.05em; margin-bottom: .2rem; }
+.ws-l { font-size: .72rem; font-weight: 400; color: var(--gray); letter-spacing: .03em; }
+.why-feats { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.wf { background: var(--bg); display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.5rem 1.75rem; border-bottom: 1px solid var(--border); transition: background .3s; }
+.wf:last-child { border-bottom: none; }
+.wf:hover { background: var(--bg3); }
+.wf-ico { width: 34px; height: 34px; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .95rem; flex-shrink: 0; transition: all .3s; background: var(--bg2); }
+.wf:hover .wf-ico { background: var(--brand); border-color: var(--brand); }
+.wf-title { font-size: .88rem; font-weight: 600; margin-bottom: .2rem; letter-spacing: -.015em; color: var(--ink); }
+.wf-desc { font-size: .78rem; font-weight: 300; color: var(--gray); line-height: 1.65; }
+
+/* MARKETS */
+.markets { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.mkt-head { text-align: center; margin-bottom: 3.5rem; }
+.mkt-sub { font-size: .87rem; font-weight: 300; color: var(--gray); margin-top: .75rem; }
+.mkt-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; border: 1px solid var(--border); }
+.mkt { background: var(--bg); padding: 3.5rem 2.5rem; text-align: center; border-right: 1px solid var(--border); transition: background .3s; }
+.mkt:last-child { border-right: none; }
+.mkt:hover { background: var(--bg3); }
+.mkt-flag { font-size: 2.5rem; margin-bottom: 1.25rem; display: block; }
+.mkt-name { font-size: 1.25rem; font-weight: 800; letter-spacing: -.03em; margin-bottom: .45rem; color: var(--ink); }
+.mkt-cur { display: inline-block; font-size: .62rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--brand); border: 1px solid rgba(254,110,83,0.22); padding: .18rem .65rem; border-radius: 4px; margin-bottom: .9rem; background: rgba(254,110,83,0.04); }
+.mkt-desc { font-size: .8rem; font-weight: 300; color: var(--gray); line-height: 1.65; max-width: 220px; margin: 0 auto; }
+
+/* ARABIC */
+.arabic-sec {
+  background: var(--ink);
+  padding: 7rem 5vw;
+  position: relative; overflow: hidden;
+}
+.arabic-sec::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 10% 50%, rgba(254,110,83,0.06), transparent),
+              radial-gradient(ellipse 50% 60% at 90% 50%, rgba(96,2,3,0.4), transparent);
+}
+.arabic-inner { max-width: 1160px; margin: 0 auto; position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; direction: rtl; }
+.arabic-lbl { font-family: 'Noto Naskh Arabic', serif; font-size: .72rem; font-weight: 700; letter-spacing: .04em; color: var(--brand); margin-bottom: 1.25rem; display: flex; align-items: center; gap: .65rem; }
+.arabic-lbl::after { content: ''; width: 18px; height: 1px; background: var(--brand); }
+.arabic-h { font-family: 'Noto Naskh Arabic', serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700; line-height: 1.3; margin-bottom: 1.25rem; color: #fff; }
+.arabic-h span { color: var(--brand); }
+.arabic-body { font-family: 'Noto Naskh Arabic', serif; font-size: .92rem; font-weight: 400; color: rgba(253,246,244,0.5); line-height: 2; margin-bottom: 2rem; }
+.arabic-items { display: flex; flex-direction: column; gap: 1rem; }
+.arabic-item { display: flex; align-items: flex-start; gap: .9rem; flex-direction: row-reverse; }
+.arabic-item-ico { width: 30px; height: 30px; border-radius: 7px; background: rgba(254,110,83,0.1); border: 1px solid rgba(254,110,83,0.18); display: flex; align-items: center; justify-content: center; font-size: .85rem; flex-shrink: 0; }
+.arabic-item-text { font-family: 'Noto Naskh Arabic', serif; font-size: .87rem; font-weight: 400; color: rgba(253,246,244,0.55); line-height: 1.75; }
+.arabic-right { direction: ltr; }
+.arabic-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 2.5rem 2.25rem; text-align: center; }
+.arabic-card-h { font-family: 'Noto Naskh Arabic', serif; font-size: 1.2rem; font-weight: 700; direction: rtl; margin-bottom: .65rem; color: #fff; }
+.arabic-card-sub { font-family: 'Noto Naskh Arabic', serif; font-size: .83rem; color: rgba(253,246,244,0.45); direction: rtl; margin-bottom: 1.75rem; line-height: 1.9; }
+.arabic-price-row { display: flex; justify-content: center; align-items: baseline; gap: .35rem; margin-bottom: 1.75rem; }
+.arabic-price { font-size: 2.6rem; font-weight: 800; color: var(--brand); letter-spacing: -.05em; line-height: 1; }
+.arabic-price-sfx { font-family: 'Noto Naskh Arabic', serif; font-size: .8rem; color: rgba(253,246,244,0.4); }
+.arabic-btn { width: 100%; padding: .8rem; border-radius: 7px; border: none; background: var(--brand); color: #fff; font-family: 'Noto Naskh Arabic', serif; font-size: .9rem; font-weight: 600; cursor: pointer; transition: all .25s; }
+.arabic-btn:hover { background: #fff; color: var(--dark); }
+
+/* CTA */
+.cta {
+  background: var(--brand);
+  padding: 7rem 5vw;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.cta::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(96,2,3,0.25), transparent);
+}
+.cta-inner { position: relative; z-index: 1; max-width: 620px; margin: 0 auto; }
+.cta-h { font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 800; line-height: .96; letter-spacing: -.04em; color: #fff; margin-bottom: 1.25rem; }
+.cta-sub { font-size: .92rem; font-weight: 300; color: rgba(255,255,255,0.7); line-height: 1.78; margin-bottom: 2.5rem; }
+.cta-btn { display: inline-flex; align-items: center; gap: .6rem; background: #fff; color: var(--brand); padding: .85rem 2rem; border-radius: 7px; font-size: .88rem; font-weight: 700; text-decoration: none; transition: all .25s; letter-spacing: -.01em; }
+.cta-btn:hover { background: var(--dark); color: #fff; transform: translateY(-1px); box-shadow: 0 12px 32px rgba(96,2,3,0.25); }
+.cta-mkts { display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; flex-wrap: wrap; }
+.cta-mkt { font-size: .76rem; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: .35rem; }
+
+/* FOOTER */
+footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
+.foot-inner { max-width: 1160px; margin: 0 auto; }
+.foot-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; margin-bottom: 4rem; }
+.foot-logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -.03em; margin-bottom: .65rem; color: #fff; }
+.foot-logo span { color: var(--brand); }
+.foot-tag { font-size: .79rem; font-weight: 300; color: rgba(253,246,244,0.35); line-height: 1.72; margin-bottom: 1.5rem; max-width: 260px; }
+.foot-socials { display: flex; gap: .5rem; }
+.fsoc { width: 32px; height: 32px; border: 1px solid rgba(253,246,244,0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: .72rem; font-weight: 700; color: rgba(253,246,244,0.35); text-decoration: none; transition: all .25s; }
+.fsoc:hover { border-color: var(--brand); color: var(--brand); }
+.foot-col-h { font-size: .63rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: var(--brand); margin-bottom: 1.25rem; }
+.foot-links { list-style: none; display: flex; flex-direction: column; gap: .6rem; }
+.foot-links a { font-size: .79rem; font-weight: 300; color: rgba(253,246,244,0.35); text-decoration: none; transition: color .25s; }
+.foot-links a:hover { color: var(--brand); }
+.foot-btm { border-top: 1px solid rgba(253,246,244,0.06); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.foot-copy { font-size: .74rem; font-weight: 300; color: rgba(253,246,244,0.18); }
+.foot-legal { display: flex; gap: 1.25rem; }
+.foot-legal a { font-size: .74rem; font-weight: 300; color: rgba(253,246,244,0.18); text-decoration: none; transition: color .25s; }
+.foot-legal a:hover { color: var(--brand); }
+
+@media(max-width:960px){
+  nav{padding:1.25rem 5vw;}
+  .nav-links{display:none;}
+  .sec{padding:5rem 5vw;}
+  .how-grid,.p-grid,.svc-grid,.mkt-grid{grid-template-columns:1fr;}
+  .step,.pc,.svc,.mkt{border-right:none;border-bottom:1px solid var(--border);}
+  .svc:nth-child(3n){border-right:none;}
+  .pricing-head{flex-direction:column;align-items:flex-start;}
+  .svc-head,.why-grid,.arabic-inner,.foot-top{grid-template-columns:1fr;gap:2.5rem;}
+  .arabic-inner{direction:rtl;}
+  .why-stats{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="cur-ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">The<span>Web</span>Buddy</a>
+  <ul class="nav-links">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#markets">Markets</a></li>
+    <li><a href="#contact" class="nav-pill">Get Started Free</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag"><span class="tag-dot"></span>UK &nbsp;·&nbsp; USA &nbsp;·&nbsp; Saudi Arabia</div>
+    <h1 class="hero-h1">
+      <span class="l1">We Build</span>
+      <span class="l2">Your Website</span>
+      <span class="l3">For Free.</span>
+    </h1>
+    <p class="hero-sub">No upfront cost. No hidden fees. No catch. We design and build your professional website completely free — you only pay a small monthly hosting fee to keep it live.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-p">Get Your Free Website →</a>
+      <a href="#how" class="btn-s">How It Works</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-lbl">Scroll</div>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <div class="ticker-item">Free Website Build<span class="sep"></span></div>
+    <div class="ticker-item">Professional Design<span class="sep"></span></div>
+    <div class="ticker-item">Mobile Responsive<span class="sep"></span></div>
+    <div class="ticker-item">Live in 2–3 Working Days<span class="sep"></span></div>
+    <div class="ticker-item">From £8/mo<span class="sep"></span></div>
+    <div class="ticker-item">UK · USA · Saudi Arabia<span class="sep"></span></div>
+    <div class="ticker-item">SEO Ready<span class="sep"></span></div>
+    <div class="ticker-item">12-Month Managed Contract<span class="sep"></span></div>
+    <div class="ticker-item">Free Website Build<span class="sep"></span></div>
+    <div class="ticker-item">Professional Design<span class="sep"></span></div>
+    <div class="ticker-item">Mobile Responsive<span class="sep"></span></div>
+    <div class="ticker-item">Live in 2–3 Working Days<span class="sep"></span></div>
+    <div class="ticker-item">From £8/mo<span class="sep"></span></div>
+    <div class="ticker-item">UK · USA · Saudi Arabia<span class="sep"></span></div>
+    <div class="ticker-item">SEO Ready<span class="sep"></span></div>
+    <div class="ticker-item">12-Month Managed Contract<span class="sep"></span></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="sec how" id="how">
+  <div class="sec-inner">
+    <div class="how-head rv">
+      <div class="sec-tag">The Process</div>
+      <h2 class="sec-h">Simple as <em>1, 2, 3.</em></h2>
+    </div>
+    <div class="how-grid">
+      <div class="step rv d1">
+        <div class="step-n">01</div>
+        <div class="step-icon">💬</div>
+        <h3 class="step-title">DM Us Your Business</h3>
+        <p class="step-desc">Send us your business name and what you do. No lengthy forms or calls required. We handle everything from there.</p>
+      </div>
+      <div class="step rv d2">
+        <div class="step-n">02</div>
+        <div class="step-icon">⚡</div>
+        <h3 class="step-title">We Design & Build</h3>
+        <p class="step-desc">Our team designs and builds your website in just 2–3 working days. Mobile responsive, SEO ready, and built to convert.</p>
+      </div>
+      <div class="step rv d3">
+        <div class="step-n">03</div>
+        <div class="step-icon">🚀</div>
+        <h3 class="step-title">You Go Live — Free</h3>
+        <p class="step-desc">Your website goes live with no upfront cost. You pay a simple monthly management fee. We handle everything for the full contract period.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="sec pricing" id="pricing">
+  <div class="sec-inner">
+    <div class="pricing-head rv">
+      <div>
+        <div class="sec-tag">Pricing</div>
+        <h2 class="sec-h">Honest. <em>Transparent.</em></h2>
+      </div>
+      <div>
+        <p class="pricing-sub">Website build is always free. All plans include a 12-month contract. Files handed over in full upon completion.</p>
+        <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
+          <div class="ctog">
+            <button class="cbtn on" onclick="setC('gbp',this)">£ GBP</button>
+            <button class="cbtn" onclick="setC('usd',this)">$ USD</button>
+            <button class="cbtn" onclick="setC('sar',this)">﷼ SAR</button>
+          </div>
+          <div class="ctog" id="billing-tog">
+            <button class="cbtn on" onclick="setBilling('monthly',this)">Monthly</button>
+            <button class="cbtn" onclick="setBilling('annual',this)">Annual <span style="font-size:.62rem;background:rgba(254,110,83,0.15);color:var(--brand);padding:.1rem .4rem;border-radius:4px;margin-left:.2rem;">2 months FREE</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="p-grid" style="grid-template-columns:repeat(3,1fr);">
+      <div class="pc rv d1">
+        <div class="p-name">Starter</div>
+        <div class="p-price"><span class="csym">£</span><span class="cval" data-gbp="8" data-usd="10" data-sar="40">8</span></div>
+        <div class="p-per">per month · 12-month contract</div>
+        <div class="p-free">✦ Build FREE</div>
+        <ul class="p-feats">
+          <li><span class="ck">✓</span>Website build (up to 3 pages)</li>
+          <li><span class="ck">✓</span>Professional custom design</li>
+          <li><span class="ck">✓</span>Mobile responsive</li>
+          <li><span class="ck">✓</span>1 content update per month</li>
+          <li><span class="ck">✓</span>Email support</li>
+          <li><span class="ck">✓</span>Live in 2–3 working days</li>
+        </ul>
+        <button class="p-btn">Get Started Free</button>
+      </div>
+      <div class="pc feat rv d2">
+        <div class="feat-lbl">Popular</div>
+        <div class="p-name">Growth</div>
+        <div class="p-price"><span class="csym">£</span><span class="cval" data-gbp="15" data-usd="20" data-sar="75">15</span></div>
+        <div class="p-per">per month · 12-month contract</div>
+        <div class="p-free">✦ Build FREE</div>
+        <ul class="p-feats">
+          <li><span class="ck">✓</span>Website build (up to 6 pages)</li>
+          <li><span class="ck">✓</span>Professional custom design</li>
+          <li><span class="ck">✓</span>Mobile responsive</li>
+          <li><span class="ck">✓</span>2 content updates per month</li>
+          <li><span class="ck">✓</span>Contact form included</li>
+          <li><span class="ck">✓</span>WhatsApp support</li>
+          <li><span class="ck">✓</span>Basic SEO setup</li>
+          <li><span class="ck">✓</span>Live in 2–3 working days</li>
+        </ul>
+        <button class="p-btn">Get Started Free</button>
+      </div>
+      <div class="pc rv d3">
+        <div class="p-name">Pro</div>
+        <div class="p-price"><span class="csym">£</span><span class="cval" data-gbp="70" data-usd="100" data-sar="375">70</span></div>
+        <div class="p-per">per month · 12-month contract</div>
+        <div class="p-free">✦ Build FREE</div>
+        <ul class="p-feats">
+          <li><span class="ck">✓</span>Detailed multi-page website</li>
+          <li><span class="ck">✓</span>Premium custom design</li>
+          <li><span class="ck">✓</span>Mobile responsive</li>
+          <li><span class="ck">✓</span>Unlimited content updates</li>
+          <li><span class="ck">✓</span>Contact form included</li>
+          <li><span class="ck">✓</span>WhatsApp priority support</li>
+          <li><span class="ck">✓</span>Advanced SEO setup</li>
+          <li><span class="ck">✓</span>Google Analytics</li>
+          <li><span class="ck">✓</span>E-commerce (add-on)</li>
+          <li><span class="ck">✓</span>Live in 2–3 working days</li>
+        </ul>
+        <button class="p-btn">Get Started Free</button>
+      </div>
+    </div>
+    <div class="rv" style="margin-top:1.5rem;padding:1.25rem 1.5rem;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:.78rem;color:var(--gray);line-height:1.7;">
+      <strong style="color:var(--ink);font-weight:600;">Contract Terms:</strong> All plans require a minimum 12-month commitment. If a contract is ended before 12 months, no files or assets will be transferred. Upon completing 12 months, clients may choose to renew or exit — on exit, all website files are handed over in full.
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec services" id="services">
+  <div class="sec-inner">
+    <div class="svc-head">
+      <div class="rv">
+        <div class="sec-tag">What We Offer</div>
+        <h2 class="sec-h">Everything your<br>business <em>needs.</em></h2>
+      </div>
+      <p class="svc-aside rv d2">Beyond the free website, we offer a full suite of digital services — SEO, social media, marketing, e-commerce and branding — to help your business grow online.</p>
+    </div>
+    <div class="svc-grid">
+      <div class="svc rv d1"><span class="svc-ico">🌐</span><h3 class="svc-title">Website Design & Build</h3><p class="svc-desc">Custom-designed professional websites built to convert visitors into customers. Mobile responsive and SEO optimised. Live in 2–3 working days.</p><span class="svc-price">FREE</span></div>
+      <div class="svc rv d2"><span class="svc-ico">📈</span><h3 class="svc-title">SEO Optimisation</h3><p class="svc-desc">Get found on Google. We handle keyword research, on-page SEO, and deliver monthly performance reports.</p><span class="svc-price">From £180 / $200 / SAR 900 /mo</span></div>
+      <div class="svc rv d3"><span class="svc-ico">📱</span><h3 class="svc-title">Social Media Management</h3><p class="svc-desc">We create and manage your social content so you can focus on running your business.</p><span class="svc-price">From £300 / $400 / SAR 1500 /mo</span></div>
+      <div class="svc rv d1"><span class="svc-ico">🎯</span><h3 class="svc-title">Digital Marketing</h3><p class="svc-desc">Targeted ad campaigns on Meta and Google that drive real traffic and real enquiries to your website.</p><span class="svc-price">From £200 / $275 / SAR 1000 /mo</span></div>
+      <div class="svc rv d2"><span class="svc-ico">🛒</span><h3 class="svc-title">E-Commerce Setup</h3><p class="svc-desc">Add a full online shop to your website. Product listings, cart, and payment integration all handled.</p><span class="svc-price">Varies — contact us for a quote</span></div>
+      <div class="svc rv d3"><span class="svc-ico">🎨</span><h3 class="svc-title">Logo & Branding</h3><p class="svc-desc">A professional logo and brand identity that makes your business look established from day one.</p><span class="svc-price">From £110 / $150 / SAR 600 one-time</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="sec why">
+  <div class="sec-inner">
+    <div class="why-grid">
+      <div>
+        <div class="sec-tag rv">Why TheWebBuddy</div>
+        <h2 class="sec-h rv">The <em>smarter</em><br>way to get online.</h2>
+        <p class="why-body rv">Traditional agencies charge £500–£1,000+ just to build a basic website. Website builders make you do it yourself. We build it for you — professionally, quickly, and at no upfront cost.</p>
+        <div class="why-stats rv">
+          <div class="ws"><div class="ws-n">£0</div><div class="ws-l">Upfront build cost</div></div>
+          <div class="ws"><div class="ws-n">2–3</div><div class="ws-l">Working days to go live</div></div>
+          <div class="ws"><div class="ws-n">3</div><div class="ws-l">Markets we serve</div></div>
+          <div class="ws"><div class="ws-n">12mo</div><div class="ws-l">Managed contract</div></div>
+        </div>
+      </div>
+      <div class="why-feats rv d2">
+        <div class="wf"><div class="wf-ico">🏆</div><div><div class="wf-title">Agency quality, fraction of the price</div><div class="wf-desc">Agencies charge £500–£1,000+ for a basic website. Ours costs you nothing to build.</div></div></div>
+        <div class="wf"><div class="wf-ico">⚡</div><div><div class="wf-title">Live in 2–3 working days</div><div class="wf-desc">No lengthy discovery phases. We move fast and get your business online quickly.</div></div></div>
+        <div class="wf"><div class="wf-ico">🔒</div><div><div class="wf-title">12-month managed contract</div><div class="wf-desc">We manage your website for the full contract period. Files handed over in full after 12 months.</div></div></div>
+        <div class="wf"><div class="wf-ico">🌍</div><div><div class="wf-title">English & Arabic bilingual</div><div class="wf-desc">We build in English, Arabic, or both — giving you an edge in the Saudi market.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKETS -->
+<section class="sec markets" id="markets">
+  <div class="sec-inner">
+    <div class="mkt-head rv">
+      <div class="sec-tag" style="justify-content:center;">Where We Work</div>
+      <h2 class="sec-h">3 Markets. <em>One Team.</em></h2>
+      <p class="mkt-sub">Localised pricing and support across three countries.</p>
+    </div>
+    <div class="mkt-grid">
+      <div class="mkt rv d1"><span class="mkt-flag">🇬🇧</span><h3 class="mkt-name">United Kingdom</h3><span class="mkt-cur">GBP — British Pound</span><p class="mkt-desc">Serving UK small businesses, sole traders, tradespeople and startups.</p></div>
+      <div class="mkt rv d2"><span class="mkt-flag">🇺🇸</span><h3 class="mkt-name">United States</h3><span class="mkt-cur">USD — US Dollar</span><p class="mkt-desc">Serving American small businesses, freelancers, coaches and creators.</p></div>
+      <div class="mkt rv d3"><span class="mkt-flag">🇸🇦</span><h3 class="mkt-name">Saudi Arabia</h3><span class="mkt-cur">SAR — Saudi Riyal</span><p class="mkt-desc">Arabic + English websites for Saudi entrepreneurs. Vision 2030 aligned.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ARABIC SECTION -->
+<div class="arabic-sec">
+  <div class="arabic-inner">
+    <div class="rv">
+      <div class="arabic-lbl">السوق السعودي</div>
+      <h2 class="arabic-h">نبني موقعك<br><span>مجاناً.</span></h2>
+      <p class="arabic-body">نصمم ونبني موقعك الإلكتروني الاحترافي بدون أي تكلفة مسبقة. تدفع فقط رسوم إدارة شهرية بسيطة مع عقد لمدة 12 شهراً.</p>
+      <div class="arabic-items">
+        <div class="arabic-item"><div class="arabic-item-ico">✅</div><div class="arabic-item-text">موقع احترافي مجاناً — بدون رسوم مسبقة أو خفية</div></div>
+        <div class="arabic-item"><div class="arabic-item-ico">⚡</div><div class="arabic-item-text">ينجز خلال 2 إلى 3 أيام عمل فقط</div></div>
+        <div class="arabic-item"><div class="arabic-item-ico">🌐</div><div class="arabic-item-text">موقع باللغتين العربية والإنجليزية — متوافق مع رؤية 2030</div></div>
+        <div class="arabic-item"><div class="arabic-item-ico">📱</div><div class="arabic-item-text">متوافق مع جميع الأجهزة — جوال وتابلت وحاسوب</div></div>
+      </div>
+    </div>
+    <div class="arabic-right rv d2">
+      <div class="arabic-card">
+        <h3 class="arabic-card-h">الباقة الشهرية</h3>
+        <p class="arabic-card-sub">البناء مجاناً دائماً — رسوم إدارة شهرية بسيطة</p>
+        <div class="arabic-price-row"><div class="arabic-price">70</div><div class="arabic-price-sfx">ريال / شهرياً</div></div>
+        <button class="arabic-btn">راسلنا الآن — مجاناً</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="cta" id="contact">
+  <div class="cta-inner">
+    <h2 class="cta-h rv">Get Your Free<br>Website Today.</h2>
+    <p class="cta-sub rv">DM us on Instagram or send us an email. We start building within 24 hours — completely free.</p>
+    <a href="mailto:hello@thewebbuddy.com" class="cta-btn rv">Start For Free →</a>
+    <div class="cta-mkts rv">
+      <span class="cta-mkt">🇬🇧 United Kingdom</span>
+      <span class="cta-mkt">🇺🇸 United States</span>
+      <span class="cta-mkt">🇸🇦 Saudi Arabia</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-top">
+      <div>
+        <div class="foot-logo">The<span>Web</span>Buddy</div>
+        <p class="foot-tag">Your Free Website Buddy. Building professional websites for businesses across the UK, USA and Saudi Arabia — completely free.</p>
+        <div class="foot-socials">
+          <a href="#" class="fsoc">ig</a>
+          <a href="#" class="fsoc">tk</a>
+          <a href="#" class="fsoc">fb</a>
+          <a href="#" class="fsoc">in</a>
+        </div>
+      </div>
+      <div>
+        <div class="foot-col-h">Services</div>
+        <ul class="foot-links">
+          <li><a href="#">Website Design</a></li>
+          <li><a href="#">SEO Optimisation</a></li>
+          <li><a href="#">Social Media</a></li>
+          <li><a href="#">Digital Marketing</a></li>
+          <li><a href="#">E-Commerce</a></li>
+          <li><a href="#">Logo & Branding</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-col-h">Company</div>
+        <ul class="foot-links">
+          <li><a href="#how">How It Works</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#markets">Our Markets</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#contact">Get Started</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-col-h">Contact</div>
+        <ul class="foot-links">
+          <li><a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a></li>
+          <li><a href="tel:+447830726389">+44 7830 726389</a></li>
+          <li><a href="tel:+966502864404">+966 5028 64404</a></li>
+          <li><a href="#">Instagram DM</a></li>
+          <li><a href="#">WhatsApp</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-btm">
+      <div class="foot-copy">© 2025 TheWebBuddy. Founded by Taha Jahangir. All rights reserved.</div>
+      <div class="foot-legal">
+        <a href="#" onclick="openModal('privacy')">Privacy Policy</a>
+        <a href="#" onclick="openModal('terms')">Terms of Service</a>
+        <a href="#" onclick="openModal('cookies')">Cookie Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- LEGAL MODALS -->
+<div id="modal-overlay" onclick="closeModal()" style="display:none;position:fixed;inset:0;background:rgba(26,10,9,0.6);z-index:800;backdrop-filter:blur(4px);"></div>
+
+<div id="modal-privacy" class="legal-modal" style="display:none;">
+  <div class="lm-inner">
+    <div class="lm-head"><h2 class="lm-title">Privacy Policy</h2><button class="lm-close" onclick="closeModal()">✕</button></div>
+    <div class="lm-body">
+      <p class="lm-date">Last updated: 1 January 2025</p>
+      <h3>1. Who We Are</h3>
+      <p>TheWebBuddy ("we", "our", "us") is a web design and digital services business founded by Taha Jahangir. We operate at <strong>www.thewebbuddy.co.uk</strong> and serve clients in the United Kingdom, United States and Saudi Arabia. Contact: <a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a></p>
+      <h3>2. Information We Collect</h3>
+      <p>We may collect the following personal information when you contact us or use our services:</p>
+      <ul><li>Full name and business name</li><li>Email address</li><li>Phone number / WhatsApp number</li><li>Business details you provide via our onboarding form</li><li>Payment information (processed securely via third-party payment providers — we do not store card details)</li><li>Technical data such as IP address and browser type when you visit our website</li></ul>
+      <h3>3. How We Use Your Information</h3>
+      <ul><li>To deliver and manage the services you have requested</li><li>To communicate with you about your project and contract</li><li>To send invoices and process payments</li><li>To improve our website and services</li><li>To comply with legal obligations</li></ul>
+      <h3>4. Legal Basis for Processing</h3>
+      <p>We process your personal data on the basis of: (a) contract performance — to deliver the services you have agreed to; (b) legitimate interests — to operate and improve our business; (c) legal compliance — where required by law.</p>
+      <h3>5. Data Sharing</h3>
+      <p>We do not sell your personal data. We may share data with trusted third-party service providers (such as payment processors and communication tools) solely to deliver our services. All third parties are required to handle your data securely and in accordance with applicable law.</p>
+      <h3>6. Data Retention</h3>
+      <p>We retain your personal data for as long as necessary to fulfil the purposes outlined in this policy, and in any case for a minimum of 6 years following the end of your contract to comply with UK financial record-keeping requirements.</p>
+      <h3>7. Your Rights</h3>
+      <p>Under UK GDPR and applicable data protection law, you have the right to: access your personal data; correct inaccurate data; request deletion of your data; object to processing; request restriction of processing; and data portability. To exercise any of these rights, contact us at <a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a>.</p>
+      <h3>8. Cookies</h3>
+      <p>Our website uses cookies to improve your browsing experience. Please refer to our Cookie Policy for full details.</p>
+      <h3>9. Changes to This Policy</h3>
+      <p>We may update this Privacy Policy from time to time. The latest version will always be published on our website.</p>
+      <h3>10. Contact</h3>
+      <p>For any privacy-related queries: <a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a> · +44 7830 726389</p>
+    </div>
+  </div>
+</div>
+
+<div id="modal-terms" class="legal-modal" style="display:none;">
+  <div class="lm-inner">
+    <div class="lm-head"><h2 class="lm-title">Terms of Service</h2><button class="lm-close" onclick="closeModal()">✕</button></div>
+    <div class="lm-body">
+      <p class="lm-date">Last updated: 1 January 2025</p>
+      <h3>1. Agreement to Terms</h3>
+      <p>By engaging TheWebBuddy ("we", "us", "our") for any service, you ("Client") agree to be bound by these Terms of Service. These terms form a legally binding agreement between you and TheWebBuddy, operated by Taha Jahangir.</p>
+      <h3>2. Services</h3>
+      <p>TheWebBuddy provides website design, development, and digital management services. The website build is provided at no upfront cost to the Client. The Client agrees to pay the applicable monthly management fee for a minimum period of 12 months from the date of website launch.</p>
+      <h3>3. Contract Duration & Minimum Term</h3>
+      <p>All service agreements carry a minimum term of <strong>12 months</strong> from the date the website goes live. During this period, TheWebBuddy retains full management and control of the website, including all associated files, code, and assets.</p>
+      <h3>4. Early Termination</h3>
+      <p>If the Client terminates the agreement before the completion of the 12-month minimum term:</p>
+      <ul><li>No website files, code, or assets will be transferred to the Client</li><li>No refunds will be issued for fees already paid</li><li>The website will be taken offline within 7 days of termination notice</li></ul>
+      <h3>5. End of Contract — File Handover</h3>
+      <p>Upon successful completion of the 12-month minimum term, the Client may choose to:</p>
+      <ul><li><strong>Renew</strong> — continue with a new contract period at the agreed rate</li><li><strong>Exit</strong> — receive a full handover of all website files, code, and assets within 14 business days of the contract end date</li></ul>
+      <h3>6. Payment Terms</h3>
+      <ul><li>Monthly fees are due on the same date each month</li><li>Annual fees (where selected) are due upfront and carry a 2-month discount</li><li>Late payment of more than 14 days may result in temporary suspension of the website</li><li>Continued non-payment may result in contract termination under clause 4</li></ul>
+      <h3>7. Client Responsibilities</h3>
+      <ul><li>Provide accurate information on the onboarding form</li><li>Supply required content, images and logos in a timely manner</li><li>Review and approve the website design within 7 days of delivery</li><li>Make payments on time in accordance with the agreed schedule</li></ul>
+      <h3>8. Intellectual Property</h3>
+      <p>During the contract period, TheWebBuddy retains ownership and control of all website files and infrastructure. Upon completion of the minimum term and full payment of all fees, ownership of the website code and content transfers to the Client.</p>
+      <h3>9. Limitation of Liability</h3>
+      <p>TheWebBuddy's total liability shall not exceed the total fees paid by the Client in the 3 months preceding the event giving rise to the claim. We are not liable for indirect, consequential or incidental damages.</p>
+      <h3>10. Governing Law</h3>
+      <ul><li><strong>UK Clients:</strong> Governed by the laws of England and Wales</li><li><strong>USA Clients:</strong> Governed by applicable US federal and state law</li><li><strong>Saudi Arabia Clients:</strong> Governed by the laws of the Kingdom of Saudi Arabia</li></ul>
+      <h3>11. Changes to Terms</h3>
+      <p>We reserve the right to update these Terms of Service. Clients will be notified of material changes with at least 30 days notice.</p>
+      <h3>12. Contact</h3>
+      <p><a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a> · +44 7830 726389 · +966 5028 64404</p>
+    </div>
+  </div>
+</div>
+
+<div id="modal-cookies" class="legal-modal" style="display:none;">
+  <div class="lm-inner">
+    <div class="lm-head"><h2 class="lm-title">Cookie Policy</h2><button class="lm-close" onclick="closeModal()">✕</button></div>
+    <div class="lm-body">
+      <p class="lm-date">Last updated: 1 January 2025</p>
+      <h3>1. What Are Cookies</h3>
+      <p>Cookies are small text files placed on your device when you visit a website. They help websites remember your preferences and improve your experience. Cookies cannot harm your device and do not contain personal information on their own.</p>
+      <h3>2. How We Use Cookies</h3>
+      <p>TheWebBuddy uses cookies on <strong>www.thewebbuddy.co.uk</strong> for the following purposes:</p>
+      <h3>Essential Cookies</h3>
+      <p>These cookies are necessary for the website to function correctly. They cannot be disabled. They include cookies that remember your preferences during a browsing session.</p>
+      <ul><li><strong>Session cookies</strong> — temporary cookies that expire when you close your browser</li><li><strong>Preference cookies</strong> — remember settings such as your selected currency on our pricing section</li></ul>
+      <h3>Analytics Cookies</h3>
+      <p>We may use analytics tools (such as Google Analytics) to understand how visitors use our website. These cookies collect anonymised data including pages visited, time spent on site, and geographic location at a regional level.</p>
+      <ul><li><strong>_ga</strong> — Google Analytics, expires after 2 years</li><li><strong>_gid</strong> — Google Analytics, expires after 24 hours</li></ul>
+      <h3>3. Third-Party Cookies</h3>
+      <p>Some features of our website may load content from third-party platforms (such as embedded contact forms or social media buttons). These third parties may set their own cookies in accordance with their own privacy policies. We recommend reviewing the privacy policies of any third-party services you interact with.</p>
+      <h3>4. Managing Cookies</h3>
+      <p>You can control and delete cookies through your browser settings. Please note that disabling certain cookies may affect the functionality of our website. To manage cookies in your browser:</p>
+      <ul><li><strong>Chrome:</strong> Settings → Privacy and Security → Cookies and other site data</li><li><strong>Safari:</strong> Preferences → Privacy → Manage Website Data</li><li><strong>Firefox:</strong> Settings → Privacy & Security → Cookies and Site Data</li><li><strong>Edge:</strong> Settings → Cookies and site permissions</li></ul>
+      <h3>5. Your Consent</h3>
+      <p>By continuing to use our website, you consent to our use of cookies as described in this policy. You may withdraw consent at any time by adjusting your browser settings or clearing your cookies.</p>
+      <h3>6. Updates to This Policy</h3>
+      <p>We may update this Cookie Policy periodically. The latest version will always be available on our website.</p>
+      <h3>7. Contact</h3>
+      <p>For any questions about our use of cookies: <a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a></p>
+    </div>
+  </div>
+</div>
+
+<style>
+.legal-modal { position: fixed; inset: 0; z-index: 900; display: flex; align-items: center; justify-content: center; padding: 2rem; pointer-events: none; }
+.legal-modal[style*="block"] { pointer-events: all; }
+.lm-inner { background: var(--bg); border-radius: 12px; max-width: 680px; width: 100%; max-height: 82vh; display: flex; flex-direction: column; box-shadow: 0 24px 80px rgba(26,10,9,0.2); border: 1px solid var(--border); }
+.lm-head { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.lm-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -.02em; color: var(--ink); }
+.lm-close { background: none; border: none; font-size: 1rem; cursor: pointer; color: var(--gray); padding: .25rem .5rem; border-radius: 6px; transition: all .2s; }
+.lm-close:hover { background: var(--bg3); color: var(--ink); }
+.lm-body { padding: 1.75rem 2rem; overflow-y: auto; font-size: .83rem; line-height: 1.78; color: var(--gray); }
+.lm-body h3 { font-size: .88rem; font-weight: 700; color: var(--ink); margin: 1.5rem 0 .5rem; letter-spacing: -.01em; }
+.lm-body h3:first-of-type { margin-top: 0; }
+.lm-body p { margin-bottom: .75rem; }
+.lm-body ul { padding-left: 1.25rem; margin-bottom: .75rem; }
+.lm-body li { margin-bottom: .35rem; }
+.lm-body a { color: var(--brand); text-decoration: none; }
+.lm-body a:hover { text-decoration: underline; }
+.lm-date { font-size: .75rem; color: var(--gray2); margin-bottom: 1.25rem !important; font-style: italic; }
+</style>
+
+<script>
+// CURSOR
+const cur=document.getElementById('cur'), ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.13;ry+=(my-ry)*.13;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+
+// NAV
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('stuck',scrollY>60),{passive:true});
+
+// REVEAL
+document.querySelectorAll('.rv').forEach(el=>{
+  new IntersectionObserver(([e])=>{if(e.isIntersecting){el.classList.add('on');}},{threshold:0.12}).observe(el);
+});
+
+// CURRENCY & BILLING
+const P={gbp:{s:'£',v:[8,15,70]},usd:{s:'$',v:[10,20,100]},sar:{s:'﷼',v:[40,75,375]}};
+let curC='gbp', curB='monthly';
+
+function setC(c,btn){
+  document.querySelectorAll('.ctog:first-of-type .cbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  curC=c;
+  updatePrices();
+}
+
+function setBilling(b,btn){
+  document.querySelectorAll('#billing-tog .cbtn').forEach(x=>x.classList.remove('on'));
+  btn.classList.add('on');
+  curB=b;
+  updatePrices();
+}
+
+function updatePrices(){
+  const {s,v}=P[curC];
+  document.querySelectorAll('.csym').forEach(el=>el.textContent=s);
+  document.querySelectorAll('.cval').forEach((el,i)=>{
+    const monthly=v[i];
+    const annual=Math.round(monthly*10)/10;
+    el.textContent = curB==='annual' ? annual : monthly;
+  });
+  document.querySelectorAll('.p-per').forEach(el=>{
+    el.textContent = curB==='annual'
+      ? 'per month, billed annually · 2 months FREE'
+      : 'per month · 12-month contract';
+  });
+  // show/hide annual badge
+  const badge = document.getElementById('annual-saving');
+  if(badge) badge.style.display = curB==='annual' ? 'block' : 'none';
+}
+
+// MODALS
+function openModal(type){
+  document.getElementById('modal-overlay').style.display='block';
+  document.querySelectorAll('.legal-modal').forEach(m=>m.style.display='none');
+  document.getElementById('modal-'+type).style.display='flex';
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modal-overlay').style.display='none';
+  document.querySelectorAll('.legal-modal').forEach(m=>m.style.display='none');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+</script>
+</body>
+</html>
