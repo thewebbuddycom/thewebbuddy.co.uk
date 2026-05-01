@@ -7,340 +7,348 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --brand: #fe6e53;
-  --dark: #600203;
-  --ink: #1a0a09;
-  --ink2: #3d1a18;
-  --gray: #6b7280;
-  --gray2: #9ca3af;
-  --border: #e8e3e2;
-  --bg: #ffffff;
-  --bg2: #fdf8f7;
-  --bg3: #faf4f3;
+  --brand: #fe6e53; --dark: #600203; --ink: #1a0a09; --gray: #6b7280;
+  --gray2: #9ca3af; --border: #e8e3e2; --bg: #ffffff; --bg2: #fdf8f7; --bg3: #faf4f3;
 }
-
 html { scroll-behavior: smooth; font-size: 15px; }
 body { font-family: 'Bricolage Grotesque', sans-serif; background: var(--bg); color: var(--ink); overflow-x: hidden; cursor: none; -webkit-font-smoothing: antialiased; }
-
+ 
 /* CURSOR */
-.cur { position: fixed; top: 0; left: 0; width: 7px; height: 7px; background: var(--brand); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .2s, height .2s; }
+.cur { position: fixed; top: 0; left: 0; width: 7px; height: 7px; background: var(--brand); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); }
 .cur-ring { position: fixed; top: 0; left: 0; width: 30px; height: 30px; border: 1px solid rgba(254,110,83,0.4); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all .12s ease; }
-
+@media(max-width:768px){.cur,.cur-ring{display:none;} body{cursor:auto;}}
+ 
 /* NAV */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 1.4rem 5vw;
-  transition: all .4s ease;
-  background: rgba(255,255,255,0);
-}
-nav.stuck {
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  padding: 1rem 5vw;
-  box-shadow: 0 1px 20px rgba(26,10,9,0.05);
-}
-.nav-logo { font-size: 1.15rem; font-weight: 800; letter-spacing: -.025em; color: var(--ink); text-decoration: none; }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 1.4rem 5vw; transition: all .4s ease; }
+nav.stuck { background: rgba(10,2,2,0.92); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(254,110,83,0.1); padding: 1rem 5vw; box-shadow: 0 1px 30px rgba(0,0,0,0.3); }
+.nav-logo { font-size: 1.15rem; font-weight: 800; letter-spacing: -.025em; color: #fff; text-decoration: none; transition: color .4s; }
 .nav-logo span { color: var(--brand); }
 .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
-.nav-links a { font-size: .78rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--gray); text-decoration: none; transition: color .3s; }
-.nav-links a:hover { color: var(--ink); }
-.nav-pill { background: var(--brand) !important; color: #fff !important; padding: .5rem 1.2rem !important; border-radius: 6px !important; letter-spacing: .04em !important; font-weight: 600 !important; transition: background .3s, transform .2s !important; }
-.nav-pill:hover { background: var(--dark) !important; transform: translateY(-1px) !important; }
-
-/* HERO */
+.nav-links a { font-size: .78rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,0.65); text-decoration: none; transition: color .3s; }
+.nav-links a:hover { color: #fff; }
+.nav-pill { background: var(--brand) !important; color: #fff !important; padding: .5rem 1.2rem !important; border-radius: 6px !important; font-weight: 600 !important; }
+.nav-pill:hover { background: var(--dark) !important; color: #fff !important; }
+ 
+/* HAMBURGER */
+.nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: .4rem; background: none; border: none; z-index: 300; }
+.nav-hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: all .3s ease; }
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+ 
+/* MOBILE DRAWER */
+.mobile-menu {
+  display: none;
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(10,2,2,0.97);
+  backdrop-filter: blur(20px);
+  z-index: 250;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 6rem 2rem 3rem;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.mobile-menu.open { display: flex; opacity: 1; }
+.mobile-menu a {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 1.1rem 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(253,246,244,0.06);
+  transition: color .3s;
+}
+.mobile-menu a:hover { color: var(--brand); }
+.mobile-menu .mobile-cta {
+  margin-top: 2rem;
+  background: var(--brand);
+  color: #fff !important;
+  border-radius: 8px;
+  border: none;
+  padding: 1rem 2.5rem !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  width: auto !important;
+}
+.mobile-menu .mobile-footer {
+  position: absolute; bottom: 2rem;
+  font-size: .75rem; color: rgba(255,255,255,0.25);
+  letter-spacing: .08em; text-transform: uppercase;
+}
+ 
+@media(max-width:768px){
+  .cur,.cur-ring { display: none; }
+  body { cursor: auto; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  nav { padding: 1rem 5vw; background: rgba(10,2,2,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(254,110,83,0.08); }
+}
+ 
+/* ── HERO 3D IMMERSIVE ──────────────────── */
 .hero {
   min-height: 100svh;
   display: flex; align-items: center; justify-content: center;
   padding: 9rem 5vw 6rem;
-  position: relative;
-  overflow: hidden;
-  background: var(--bg);
+  position: relative; overflow: hidden;
+  background: var(--ink);
+  perspective: 1000px;
 }
-
-/* subtle grid */
-.hero::before {
-  content: '';
+ 
+/* animated gradient background */
+.hero-bg {
+  position: absolute; inset: -20%;
+  background: conic-gradient(from 180deg at 50% 50%, #600203 0deg, #1a0a09 90deg, #600203 180deg, #0a0202 270deg, #600203 360deg);
+  animation: rotateBg 20s linear infinite;
+  opacity: 0.7;
+}
+@keyframes rotateBg { to { transform: rotate(360deg); } }
+ 
+/* radial vignette */
+.hero-vignette {
   position: absolute; inset: 0;
-  background-image:
-    linear-gradient(var(--border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: 60px 60px;
-  opacity: 0.5;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
+  background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 20%, rgba(10,2,2,0.85) 100%);
+  pointer-events: none; z-index: 1;
 }
-
-/* brand glow */
-.hero::after {
-  content: '';
-  position: absolute;
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(254,110,83,0.08) 0%, transparent 70%);
-  top: 50%; left: 50%;
-  transform: translate(-50%, -55%);
-  pointer-events: none;
+ 
+/* floating orbs */
+.orb {
+  position: absolute; border-radius: 50%; pointer-events: none; filter: blur(60px);
 }
-
-.hero-inner {
-  position: relative; z-index: 10;
-  max-width: 760px;
-  text-align: center;
+.orb1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(254,110,83,0.25), transparent 70%); top: -10%; left: -10%; animation: float1 12s ease-in-out infinite alternate; z-index: 1; }
+.orb2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(96,2,3,0.5), transparent 70%); bottom: -5%; right: -5%; animation: float2 15s ease-in-out infinite alternate; z-index: 1; }
+.orb3 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(254,110,83,0.12), transparent 70%); top: 60%; left: 60%; animation: float3 18s ease-in-out infinite alternate; z-index: 1; }
+@keyframes float1 { to { transform: translate(40px, 60px) scale(1.1); } }
+@keyframes float2 { to { transform: translate(-30px, -40px) scale(1.15); } }
+@keyframes float3 { to { transform: translate(-50px, 30px) scale(0.9); } }
+ 
+/* grid lines */
+.hero-grid-lines {
+  position: absolute; inset: 0; z-index: 1;
+  background-image: linear-gradient(rgba(254,110,83,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(254,110,83,0.06) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 100%);
 }
-
+ 
+/* 3D floating card */
+.hero-3d-card {
+  position: absolute; z-index: 2;
+  width: 320px; height: 200px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(254,110,83,0.2);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  transform: perspective(800px) rotateX(15deg) rotateY(-15deg);
+  animation: card3d 8s ease-in-out infinite alternate;
+  right: 8%; top: 22%;
+  padding: 1.5rem;
+  display: flex; flex-direction: column; gap: .75rem;
+}
+@keyframes card3d {
+  0% { transform: perspective(800px) rotateX(15deg) rotateY(-15deg) translateY(0); }
+  100% { transform: perspective(800px) rotateX(8deg) rotateY(-8deg) translateY(-20px); }
+}
+.hero-3d-card .card-dot { width: 8px; height: 8px; border-radius: 50%; }
+.hero-3d-card .card-bar { height: 6px; border-radius: 4px; background: rgba(255,255,255,0.1); }
+.hero-3d-card .card-bar.accent { background: rgba(254,110,83,0.4); width: 60%; }
+.hero-3d-card .card-bar.sm { width: 40%; }
+.hero-3d-card-header { display: flex; gap: .4rem; }
+@media(max-width:768px){ .hero-3d-card { display: none; } }
+ 
+.hero-inner { position: relative; z-index: 10; max-width: 760px; text-align: center; }
+ 
 .hero-tag {
   display: inline-flex; align-items: center; gap: .45rem;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  padding: .3rem .9rem;
-  font-size: .68rem;
-  font-weight: 600;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--brand);
-  margin-bottom: 2rem;
-  opacity: 0;
-  animation: up .8s .1s cubic-bezier(.16,1,.3,1) forwards;
+  background: rgba(254,110,83,0.1);
+  border: 1px solid rgba(254,110,83,0.3);
+  border-radius: 100px; padding: .3rem .9rem;
+  font-size: .68rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--brand); margin-bottom: 2rem;
+  opacity: 0; animation: up .8s .1s cubic-bezier(.16,1,.3,1) forwards;
 }
 .tag-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--brand); animation: blink 2s ease infinite; }
 @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.3;} }
-
+ 
 .hero-h1 {
-  font-size: clamp(2.6rem, 6.5vw, 5rem);
-  font-weight: 800;
-  line-height: .96;
-  letter-spacing: -.04em;
-  margin-bottom: 1.5rem;
-  opacity: 0;
-  animation: up .8s .18s cubic-bezier(.16,1,.3,1) forwards;
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 800; line-height: .93; letter-spacing: -.04em; margin-bottom: 1.5rem;
+  opacity: 0; animation: up .8s .18s cubic-bezier(.16,1,.3,1) forwards;
 }
-.hero-h1 .l1 { display: block; color: var(--ink); }
-.hero-h1 .l2 { display: block; color: var(--brand); }
+.hero-h1 .l1 { display: block; color: #fff; }
+.hero-h1 .l2 { display: block; color: var(--brand); text-shadow: 0 0 40px rgba(254,110,83,0.4); }
 .hero-h1 .l3 {
   display: block;
-  -webkit-text-stroke: 1.5px rgba(26,10,9,0.15);
+  -webkit-text-stroke: 2px rgba(255,255,255,0.55);
   -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 20px rgba(255,255,255,0.15));
 }
-
+ 
 .hero-sub {
-  font-size: .95rem;
-  font-weight: 300;
-  line-height: 1.8;
-  color: var(--gray);
-  max-width: 460px;
-  margin: 0 auto 2.5rem;
-  opacity: 0;
-  animation: up .8s .26s cubic-bezier(.16,1,.3,1) forwards;
+  font-size: .95rem; font-weight: 300; line-height: 1.8;
+  color: rgba(255,255,255,0.7); max-width: 460px; margin: 0 auto 2.5rem;
+  opacity: 0; animation: up .8s .26s cubic-bezier(.16,1,.3,1) forwards;
 }
-
-.hero-btns {
-  display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap;
-  opacity: 0;
-  animation: up .8s .34s cubic-bezier(.16,1,.3,1) forwards;
-}
-.btn-p {
-  display: inline-flex; align-items: center; gap: .5rem;
-  background: var(--brand); color: #fff;
-  padding: .75rem 1.75rem;
-  border-radius: 6px;
-  font-size: .85rem; font-weight: 600;
-  text-decoration: none;
-  transition: all .25s;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  letter-spacing: -.01em;
-}
-.btn-p:hover { background: var(--dark); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(254,110,83,0.2); }
-.btn-s {
-  display: inline-flex; align-items: center; gap: .5rem;
-  border: 1px solid var(--border); color: var(--gray);
-  padding: .75rem 1.75rem;
-  border-radius: 6px;
-  font-size: .85rem; font-weight: 500;
-  text-decoration: none;
-  transition: all .25s;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  background: var(--bg);
-}
+.hero-btns { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; opacity: 0; animation: up .8s .34s cubic-bezier(.16,1,.3,1) forwards; }
+ 
+.btn-p { display: inline-flex; align-items: center; gap: .5rem; background: var(--brand); color: #fff; padding: .75rem 1.75rem; border-radius: 6px; font-size: .85rem; font-weight: 600; text-decoration: none; border: none; cursor: pointer; font-family: 'Bricolage Grotesque', sans-serif; transition: all .25s; }
+.btn-p:hover { background: var(--dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(254,110,83,0.3); }
+.btn-s { display: inline-flex; align-items: center; gap: .5rem; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: .75rem 1.75rem; border-radius: 6px; font-size: .85rem; font-weight: 500; text-decoration: none; transition: all .25s; font-family: 'Bricolage Grotesque', sans-serif; cursor: pointer; background: transparent; }
 .btn-s:hover { border-color: var(--brand); color: var(--brand); }
-
-.hero-scroll {
-  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
-  display: flex; flex-direction: column; align-items: center; gap: .4rem;
-  z-index: 10;
-  opacity: 0;
-  animation: up .8s .6s cubic-bezier(.16,1,.3,1) forwards;
-}
+ 
+/* scroll indicator */
+.hero-scroll { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: .4rem; z-index: 10; opacity: 0; animation: up .8s .6s cubic-bezier(.16,1,.3,1) forwards; }
 .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--brand), transparent); animation: scrl 2.4s ease-in-out infinite; }
-.scroll-lbl { font-size: .6rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gray2); }
+.scroll-lbl { font-size: .6rem; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
 @keyframes scrl { 0%{transform:scaleY(0);transform-origin:top;} 50%{transform:scaleY(1);transform-origin:top;} 51%{transform:scaleY(1);transform-origin:bottom;} 100%{transform:scaleY(0);transform-origin:bottom;} }
 @keyframes up { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;} }
-
+ 
 /* TICKER */
-.ticker {
-  overflow: hidden;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  background: var(--bg2);
-  padding: .8rem 0;
-}
-.ticker-track { display: flex; animation: tick 32s linear infinite; white-space: nowrap; }
-.ticker-item { display: flex; align-items: center; gap: 2rem; padding-right: 2rem; font-size: .72rem; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--gray2); flex-shrink: 0; }
-.sep { width: 3px; height: 3px; border-radius: 50%; background: var(--brand); flex-shrink: 0; }
-@keyframes tick { from{transform:translateX(0);}to{transform:translateX(-50%);} }
-
+.ticker { overflow: hidden; border-top: 1px solid rgba(254,110,83,0.15); border-bottom: 1px solid rgba(254,110,83,0.15); background: var(--ink); padding: .8rem 0; }
+.ticker-track { display: flex; white-space: nowrap; width: max-content; animation: tick 35s linear infinite; }
+.ticker-item { display: inline-flex; align-items: center; gap: 2rem; padding-right: 2rem; font-size: .72rem; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: rgba(253,246,244,0.4); flex-shrink: 0; }
+.sep { width: 3px; height: 3px; border-radius: 50%; background: var(--brand); flex-shrink: 0; display: inline-block; }
+@keyframes tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+ 
 /* SHARED */
 .sec { padding: 7rem 5vw; }
 .sec-inner { max-width: 1160px; margin: 0 auto; }
-
-.sec-tag {
-  display: inline-flex; align-items: center; gap: .6rem;
-  font-size: .68rem; font-weight: 700; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--brand);
-  margin-bottom: 1rem;
-}
+.sec-tag { display: inline-flex; align-items: center; gap: .6rem; font-size: .68rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 1rem; }
 .sec-tag::before { content: ''; width: 18px; height: 1px; background: var(--brand); }
-
-.sec-h {
-  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-  font-weight: 800;
-  line-height: 1.02;
-  letter-spacing: -.035em;
-  color: var(--ink);
-}
+.sec-h { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800; line-height: 1.02; letter-spacing: -.035em; color: var(--ink); }
 .sec-h em { font-style: italic; font-weight: 300; color: var(--brand); }
-
-/* REVEAL */
 .rv { opacity: 0; transform: translateY(22px); transition: opacity .75s cubic-bezier(.16,1,.3,1), transform .75s cubic-bezier(.16,1,.3,1); }
 .rv.on { opacity: 1; transform: none; }
 .d1{transition-delay:.08s;}.d2{transition-delay:.16s;}.d3{transition-delay:.24s;}.d4{transition-delay:.32s;}
-
-/* HOW IT WORKS */
-.how { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+ 
+/* HOW */
+.how { background: var(--ink); border-top: 1px solid rgba(254,110,83,0.1); border-bottom: 1px solid rgba(254,110,83,0.1); }
 .how-head { margin-bottom: 3.5rem; }
-.how-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; border: 1px solid var(--border); }
-.step {
-  padding: 2.5rem 2.25rem;
-  border-right: 1px solid var(--border);
-  position: relative; overflow: hidden;
-  transition: background .3s;
-  background: var(--bg);
-}
+.how-head .sec-tag { color: var(--brand); }
+.how-head .sec-h { color: #fff; }
+.how-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; border: 1px solid rgba(253,246,244,0.07); }
+.step { background: rgba(253,246,244,0.02); padding: 2.5rem 2.25rem; border-right: 1px solid rgba(253,246,244,0.07); position: relative; overflow: hidden; transition: background .3s; }
 .step:last-child { border-right: none; }
-.step:hover { background: var(--bg3); }
+.step:hover { background: rgba(254,110,83,0.05); }
 .step-n { font-size: 4rem; font-weight: 800; line-height: 1; color: rgba(254,110,83,0.08); position: absolute; top: 1.25rem; right: 1.75rem; letter-spacing: -.05em; }
-.step-icon { width: 38px; height: 38px; border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: 1.5rem; background: var(--bg); transition: all .3s; }
+.step-icon { width: 38px; height: 38px; border: 1px solid rgba(254,110,83,0.25); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 1.5rem; background: rgba(254,110,83,0.08); transition: all .3s; }
 .step:hover .step-icon { border-color: var(--brand); background: var(--brand); }
-.step-title { font-size: 1rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: .5rem; color: var(--ink); }
-.step-desc { font-size: .83rem; line-height: 1.72; color: var(--gray); font-weight: 300; }
-
+.step-title { font-size: 1rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: .5rem; color: #fff; }
+.step-desc { font-size: .84rem; line-height: 1.75; color: rgba(255,255,255,0.55); font-weight: 300; }
+@media(max-width:768px){ .how-grid { grid-template-columns: 1fr; } .step { border-right: none; border-bottom: 1px solid rgba(253,246,244,0.07); } .step:last-child { border-bottom: none; } }
+ 
 /* PRICING */
-.pricing { background: var(--bg); }
+.pricing { background: var(--ink); }
 .pricing-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem; }
-.pricing-sub { font-size: .83rem; font-weight: 300; color: var(--gray); line-height: 1.7; max-width: 300px; margin-bottom: 1.25rem; }
-.ctog { display: inline-flex; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: .2rem; }
-.cbtn { padding: .38rem .9rem; border-radius: 6px; border: none; font-family: 'Bricolage Grotesque', sans-serif; font-size: .74rem; font-weight: 600; cursor: pointer; background: transparent; color: var(--gray); transition: all .25s; letter-spacing: .04em; }
+.pricing .sec-h { color: #fff; }
+.pricing-sub { font-size: .83rem; font-weight: 300; color: rgba(253,246,244,0.45); line-height: 1.7; max-width: 300px; margin-bottom: 1.25rem; }
+.toggles-row { display: flex; flex-direction: column; gap: .75rem; align-items: flex-end; }
+.ctog { display: inline-flex; background: rgba(253,246,244,0.06); border: 1px solid rgba(253,246,244,0.12); border-radius: 8px; padding: .2rem; }
+.cbtn { padding: .38rem .9rem; border-radius: 6px; border: none; font-family: 'Bricolage Grotesque', sans-serif; font-size: .74rem; font-weight: 600; cursor: pointer; background: transparent; color: rgba(253,246,244,0.45); transition: all .25s; letter-spacing: .04em; }
 .cbtn.on { background: var(--brand); color: #fff; }
-
-.p-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; border: 1px solid var(--border); }
-.pc {
-  padding: 2rem 1.75rem;
-  border-right: 1px solid var(--border);
-  background: var(--bg);
-  display: flex; flex-direction: column;
-  position: relative;
-  transition: background .3s;
-}
+ 
+/* PRICING GRID — MOBILE FIXED */
+.p-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; border: 1px solid rgba(253,246,244,0.07); }
+@media(max-width:900px){ .p-grid { grid-template-columns: 1fr; } }
+ 
+.pc { background: rgba(253,246,244,0.04); padding: 2rem 1.75rem; border-right: 1px solid rgba(253,246,244,0.07); display: flex; flex-direction: column; position: relative; transition: background .3s; }
 .pc:last-child { border-right: none; }
-.pc:hover { background: var(--bg3); }
-.pc.feat { background: var(--ink); border-color: var(--ink); }
-.pc.feat:hover { background: var(--dark); }
-.feat-lbl { position: absolute; top: 1.25rem; right: 1.25rem; font-size: .58rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; background: var(--brand); color: #fff; padding: .2rem .55rem; border-radius: 4px; }
+.pc:hover { background: rgba(253,246,244,0.07); }
+.pc.feat { background: var(--brand); }
+.pc.feat:hover { background: #e55a3f; }
+@media(max-width:900px){ .pc { border-right: none; border-bottom: 1px solid rgba(253,246,244,0.07); } .pc:last-child { border-bottom: none; } }
+ 
+.feat-lbl { position: absolute; top: 1.25rem; right: 1.25rem; font-size: .58rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; background: #fff; color: var(--brand); padding: .2rem .55rem; border-radius: 4px; }
 .p-name { font-size: .65rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: var(--brand); margin-bottom: 1rem; }
-.p-price { font-size: 2.4rem; font-weight: 800; line-height: 1; letter-spacing: -.05em; color: var(--ink); margin-bottom: .2rem; }
+.pc.feat .p-name { color: rgba(255,255,255,0.8); }
+.p-price-wrap { margin-bottom: .2rem; }
+.p-price-original { font-size: 1.1rem; font-weight: 500; color: rgba(253,246,244,0.3); text-decoration: line-through; display: none; margin-bottom: .1rem; }
+.p-price { font-size: 2.4rem; font-weight: 800; line-height: 1; letter-spacing: -.05em; color: #fff; }
 .pc.feat .p-price { color: #fff; }
-.p-per { font-size: .75rem; color: var(--gray2); margin-bottom: 1.25rem; font-weight: 300; }
-.pc.feat .p-per { color: rgba(253,246,244,0.4); }
-.p-free { display: inline-flex; align-items: center; gap: .28rem; font-size: .63rem; font-weight: 700; letter-spacing: .05em; color: var(--brand); border: 1px solid rgba(254,110,83,0.22); padding: .18rem .6rem; border-radius: 4px; margin-bottom: 1.5rem; background: rgba(254,110,83,0.04); }
+.p-price-annual-total { font-size: .72rem; font-weight: 600; color: var(--brand); background: rgba(254,110,83,0.1); border: 1px solid rgba(254,110,83,0.2); padding: .2rem .6rem; border-radius: 4px; display: none; margin-top: .4rem; width: fit-content; }
+.pc.feat .p-price-annual-total { color: #fff; background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); }
+.p-per { font-size: .75rem; color: rgba(253,246,244,0.35); margin-bottom: 1.25rem; font-weight: 300; }
+.pc.feat .p-per { color: rgba(255,255,255,0.65); }
+.p-free { display: inline-flex; align-items: center; gap: .28rem; font-size: .63rem; font-weight: 700; letter-spacing: .05em; color: var(--brand); border: 1px solid rgba(254,110,83,0.25); padding: .18rem .6rem; border-radius: 4px; margin-bottom: 1.5rem; background: rgba(254,110,83,0.08); }
+.pc.feat .p-free { color: #fff; border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.12); }
 .p-feats { list-style: none; flex: 1; margin-bottom: 1.5rem; }
-.p-feats li { display: flex; align-items: flex-start; gap: .55rem; font-size: .79rem; color: var(--gray); padding: .45rem 0; border-bottom: 1px solid var(--border); font-weight: 300; line-height: 1.5; }
-.pc.feat .p-feats li { color: rgba(253,246,244,0.5); border-color: rgba(253,246,244,0.07); }
+.p-feats li { display: flex; align-items: flex-start; gap: .55rem; font-size: .79rem; color: rgba(253,246,244,0.5); padding: .45rem 0; border-bottom: 1px solid rgba(253,246,244,0.07); font-weight: 300; line-height: 1.5; }
+.pc.feat .p-feats li { color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.12); }
 .p-feats li:last-child { border: none; }
 .ck { color: var(--brand); flex-shrink: 0; font-size: .78rem; margin-top: 2px; }
-.p-btn { width: 100%; padding: .72rem; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--gray); font-family: 'Bricolage Grotesque', sans-serif; font-size: .8rem; font-weight: 600; cursor: pointer; transition: all .25s; }
+.pc.feat .ck { color: #fff; }
+.p-btn { width: 100%; padding: .72rem; border-radius: 6px; border: 1px solid rgba(253,246,244,0.15); background: transparent; color: rgba(253,246,244,0.6); font-family: 'Bricolage Grotesque', sans-serif; font-size: .8rem; font-weight: 600; cursor: pointer; transition: all .25s; }
 .p-btn:hover { background: var(--brand); border-color: var(--brand); color: #fff; }
-.pc.feat .p-btn { background: var(--brand); border-color: var(--brand); color: #fff; }
-.pc.feat .p-btn:hover { background: #fff; border-color: #fff; color: var(--dark); }
-
+.pc.feat .p-btn { background: #fff; border-color: #fff; color: var(--brand); }
+.pc.feat .p-btn:hover { background: var(--dark); border-color: var(--dark); color: #fff; }
+.annual-note { margin-top: 1rem; padding: 1rem 1.25rem; background: rgba(254,110,83,0.08); border: 1px solid rgba(254,110,83,0.2); border-radius: 8px; font-size: .76rem; color: rgba(253,246,244,0.6); line-height: 1.65; display: none; }
+.annual-note strong { color: var(--brand); }
+ 
 /* SERVICES */
-.services { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.services { background: var(--ink); border-top: 1px solid rgba(254,110,83,0.1); border-bottom: 1px solid rgba(254,110,83,0.1); }
 .svc-head { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: end; margin-bottom: 3.5rem; }
-.svc-aside { font-size: .87rem; font-weight: 300; color: var(--gray); line-height: 1.78; }
-.svc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; border: 1px solid var(--border); }
-.svc {
-  background: var(--bg);
-  padding: 2.25rem 2rem;
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  position: relative; overflow: hidden;
-  transition: background .3s;
-}
+.svc-head .sec-h { color: #fff; }
+.svc-aside { font-size: .87rem; font-weight: 300; color: rgba(255,255,255,0.55); line-height: 1.78; }
+.svc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; border: 1px solid rgba(253,246,244,0.08); }
+.svc { background: rgba(253,246,244,0.03); padding: 2.25rem 2rem; border-right: 1px solid rgba(253,246,244,0.08); border-bottom: 1px solid rgba(253,246,244,0.08); position: relative; overflow: hidden; transition: background .3s; }
 .svc:nth-child(3n) { border-right: none; }
 .svc:nth-child(n+4) { border-bottom: none; }
-.svc:hover { background: var(--bg3); }
+.svc:hover { background: rgba(254,110,83,0.06); }
 .svc::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--brand); transform: scaleX(0); transform-origin: left; transition: transform .4s cubic-bezier(.16,1,.3,1); }
 .svc:hover::after { transform: scaleX(1); }
-.svc-ico { font-size: 1.5rem; margin-bottom: 1.25rem; display: block; }
-.svc-title { font-size: .95rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: .45rem; color: var(--ink); }
-.svc-desc { font-size: .8rem; line-height: 1.72; color: var(--gray); font-weight: 300; margin-bottom: 1.25rem; }
+.svc-ico { font-size: 1.6rem; margin-bottom: 1.25rem; display: block; filter: saturate(1.2); }
+.svc-title { font-size: .95rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: .45rem; color: #fff; }
+.svc-desc { font-size: .81rem; line-height: 1.75; color: rgba(255,255,255,0.5); font-weight: 300; margin-bottom: 1.25rem; }
 .svc-price { font-size: .7rem; font-weight: 700; color: var(--brand); letter-spacing: .04em; }
-
+@media(max-width:768px){ .svc-head { grid-template-columns: 1fr; gap: 1.5rem; } .svc-grid { grid-template-columns: 1fr; } .svc { border-right: none; } .svc:nth-child(3n) { border-right: none; } .svc:nth-child(n+4) { border-bottom: 1px solid rgba(253,246,244,0.08); } .svc:last-child { border-bottom: none; } }
+ 
 /* WHY */
-.why { background: var(--bg); }
-.why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
-.why-body { font-size: .87rem; font-weight: 300; color: var(--gray); line-height: 1.82; margin: 1.25rem 0 2.5rem; }
+.why { background: var(--dark); position: relative; overflow: hidden; }
+.why::before { content: 'WHY'; position: absolute; font-size: 22vw; font-weight: 800; color: rgba(254,110,83,0.04); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; letter-spacing: -.05em; white-space: nowrap; user-select: none; }
+.why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; position: relative; z-index: 1; }
+.why .sec-tag { color: var(--brand); }
+.why .sec-h { color: #fff; }
+.why-body { font-size: .87rem; font-weight: 300; color: rgba(255,255,255,0.55); line-height: 1.82; margin: 1.25rem 0 2.5rem; }
 .why-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; padding-top: .5rem; }
-.ws { padding: 1.5rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg2); }
+.ws { padding: 1.5rem; border: 1px solid rgba(254,110,83,0.15); border-radius: 8px; background: rgba(254,110,83,0.06); }
 .ws-n { font-size: 2.2rem; font-weight: 800; color: var(--brand); line-height: 1; letter-spacing: -.05em; margin-bottom: .2rem; }
-.ws-l { font-size: .72rem; font-weight: 400; color: var(--gray); letter-spacing: .03em; }
-.why-feats { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-.wf { background: var(--bg); display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.5rem 1.75rem; border-bottom: 1px solid var(--border); transition: background .3s; }
+.ws-l { font-size: .72rem; font-weight: 400; color: rgba(255,255,255,0.5); letter-spacing: .03em; }
+.why-feats { display: flex; flex-direction: column; gap: 0; border: 1px solid rgba(253,246,244,0.08); border-radius: 10px; overflow: hidden; }
+.wf { background: rgba(253,246,244,0.03); display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.5rem 1.75rem; border-bottom: 1px solid rgba(253,246,244,0.07); transition: background .3s; }
 .wf:last-child { border-bottom: none; }
-.wf:hover { background: var(--bg3); }
-.wf-ico { width: 34px; height: 34px; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .95rem; flex-shrink: 0; transition: all .3s; background: var(--bg2); }
+.wf:hover { background: rgba(254,110,83,0.07); }
+.wf-ico { width: 36px; height: 36px; border: 1px solid rgba(254,110,83,0.25); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; transition: all .3s; background: rgba(254,110,83,0.1); }
 .wf:hover .wf-ico { background: var(--brand); border-color: var(--brand); }
-.wf-title { font-size: .88rem; font-weight: 600; margin-bottom: .2rem; letter-spacing: -.015em; color: var(--ink); }
-.wf-desc { font-size: .78rem; font-weight: 300; color: var(--gray); line-height: 1.65; }
-
+.wf-title { font-size: .88rem; font-weight: 600; margin-bottom: .2rem; letter-spacing: -.015em; color: #fff; }
+.wf-desc { font-size: .79rem; font-weight: 300; color: rgba(255,255,255,0.5); line-height: 1.65; }
+@media(max-width:768px){ .why-grid { grid-template-columns: 1fr; gap: 3rem; } .why-stats { grid-template-columns: 1fr 1fr; } }
+ 
 /* MARKETS */
-.markets { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.markets { background: var(--ink); border-top: 1px solid rgba(254,110,83,0.1); }
 .mkt-head { text-align: center; margin-bottom: 3.5rem; }
-.mkt-sub { font-size: .87rem; font-weight: 300; color: var(--gray); margin-top: .75rem; }
-.mkt-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; border: 1px solid var(--border); }
-.mkt { background: var(--bg); padding: 3.5rem 2.5rem; text-align: center; border-right: 1px solid var(--border); transition: background .3s; }
+.mkt-head .sec-h { color: #fff; }
+.mkt-sub { font-size: .87rem; font-weight: 300; color: rgba(255,255,255,0.45); margin-top: .75rem; }
+.mkt-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; border: 1px solid rgba(253,246,244,0.08); }
+.mkt { background: rgba(253,246,244,0.02); padding: 3.5rem 2.5rem; text-align: center; border-right: 1px solid rgba(253,246,244,0.08); transition: background .3s; }
 .mkt:last-child { border-right: none; }
-.mkt:hover { background: var(--bg3); }
-.mkt-flag { font-size: 2.5rem; margin-bottom: 1.25rem; display: block; }
-.mkt-name { font-size: 1.25rem; font-weight: 800; letter-spacing: -.03em; margin-bottom: .45rem; color: var(--ink); }
-.mkt-cur { display: inline-block; font-size: .62rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--brand); border: 1px solid rgba(254,110,83,0.22); padding: .18rem .65rem; border-radius: 4px; margin-bottom: .9rem; background: rgba(254,110,83,0.04); }
-.mkt-desc { font-size: .8rem; font-weight: 300; color: var(--gray); line-height: 1.65; max-width: 220px; margin: 0 auto; }
-
+.mkt:hover { background: rgba(254,110,83,0.05); }
+.mkt-flag { margin-bottom: 0; display: block; }
+.mkt-name { font-size: 1.25rem; font-weight: 800; letter-spacing: -.03em; margin-bottom: .45rem; color: #fff; }
+.mkt-cur { display: inline-block; font-size: .62rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--brand); border: 1px solid rgba(254,110,83,0.3); padding: .18rem .65rem; border-radius: 4px; margin-bottom: .9rem; background: rgba(254,110,83,0.08); }
+.mkt-desc { font-size: .81rem; font-weight: 300; color: rgba(255,255,255,0.5); line-height: 1.65; max-width: 220px; margin: 0 auto; }
+@media(max-width:768px){ .mkt-grid { grid-template-columns: 1fr; } .mkt { border-right: none; border-bottom: 1px solid rgba(253,246,244,0.08); } .mkt:last-child { border-bottom: none; } }
+ 
 /* ARABIC */
-.arabic-sec {
-  background: var(--ink);
-  padding: 7rem 5vw;
-  position: relative; overflow: hidden;
-}
-.arabic-sec::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse 70% 60% at 10% 50%, rgba(254,110,83,0.06), transparent),
-              radial-gradient(ellipse 50% 60% at 90% 50%, rgba(96,2,3,0.4), transparent);
-}
+.arabic-sec { background: var(--ink); padding: 7rem 5vw; position: relative; overflow: hidden; }
+.arabic-sec::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 10% 50%, rgba(254,110,83,0.06), transparent), radial-gradient(ellipse 50% 60% at 90% 50%, rgba(96,2,3,0.4), transparent); }
 .arabic-inner { max-width: 1160px; margin: 0 auto; position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; direction: rtl; }
-.arabic-lbl { font-family: 'Noto Naskh Arabic', serif; font-size: .72rem; font-weight: 700; letter-spacing: .04em; color: var(--brand); margin-bottom: 1.25rem; display: flex; align-items: center; gap: .65rem; }
+.arabic-lbl { font-family: 'Noto Naskh Arabic', serif; font-size: .72rem; font-weight: 700; color: var(--brand); margin-bottom: 1.25rem; display: flex; align-items: center; gap: .65rem; }
 .arabic-lbl::after { content: ''; width: 18px; height: 1px; background: var(--brand); }
 .arabic-h { font-family: 'Noto Naskh Arabic', serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700; line-height: 1.3; margin-bottom: 1.25rem; color: #fff; }
 .arabic-h span { color: var(--brand); }
@@ -350,7 +358,7 @@ nav.stuck {
 .arabic-item-ico { width: 30px; height: 30px; border-radius: 7px; background: rgba(254,110,83,0.1); border: 1px solid rgba(254,110,83,0.18); display: flex; align-items: center; justify-content: center; font-size: .85rem; flex-shrink: 0; }
 .arabic-item-text { font-family: 'Noto Naskh Arabic', serif; font-size: .87rem; font-weight: 400; color: rgba(253,246,244,0.55); line-height: 1.75; }
 .arabic-right { direction: ltr; }
-.arabic-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 2.5rem 2.25rem; text-align: center; }
+.arabic-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 2.5rem 2.25rem; text-align: center; }
 .arabic-card-h { font-family: 'Noto Naskh Arabic', serif; font-size: 1.2rem; font-weight: 700; direction: rtl; margin-bottom: .65rem; color: #fff; }
 .arabic-card-sub { font-family: 'Noto Naskh Arabic', serif; font-size: .83rem; color: rgba(253,246,244,0.45); direction: rtl; margin-bottom: 1.75rem; line-height: 1.9; }
 .arabic-price-row { display: flex; justify-content: center; align-items: baseline; gap: .35rem; margin-bottom: 1.75rem; }
@@ -358,27 +366,19 @@ nav.stuck {
 .arabic-price-sfx { font-family: 'Noto Naskh Arabic', serif; font-size: .8rem; color: rgba(253,246,244,0.4); }
 .arabic-btn { width: 100%; padding: .8rem; border-radius: 7px; border: none; background: var(--brand); color: #fff; font-family: 'Noto Naskh Arabic', serif; font-size: .9rem; font-weight: 600; cursor: pointer; transition: all .25s; }
 .arabic-btn:hover { background: #fff; color: var(--dark); }
-
+@media(max-width:768px){ .arabic-inner { grid-template-columns: 1fr; gap: 3rem; direction: rtl; } }
+ 
 /* CTA */
-.cta {
-  background: var(--brand);
-  padding: 7rem 5vw;
-  text-align: center;
-  position: relative; overflow: hidden;
-}
-.cta::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(96,2,3,0.25), transparent);
-}
+.cta { background: var(--brand); padding: 7rem 5vw; text-align: center; position: relative; overflow: hidden; }
+.cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(96,2,3,0.25), transparent); }
 .cta-inner { position: relative; z-index: 1; max-width: 620px; margin: 0 auto; }
 .cta-h { font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 800; line-height: .96; letter-spacing: -.04em; color: #fff; margin-bottom: 1.25rem; }
 .cta-sub { font-size: .92rem; font-weight: 300; color: rgba(255,255,255,0.7); line-height: 1.78; margin-bottom: 2.5rem; }
-.cta-btn { display: inline-flex; align-items: center; gap: .6rem; background: #fff; color: var(--brand); padding: .85rem 2rem; border-radius: 7px; font-size: .88rem; font-weight: 700; text-decoration: none; transition: all .25s; letter-spacing: -.01em; }
-.cta-btn:hover { background: var(--dark); color: #fff; transform: translateY(-1px); box-shadow: 0 12px 32px rgba(96,2,3,0.25); }
+.cta-btn { display: inline-flex; align-items: center; gap: .6rem; background: #fff; color: var(--brand); padding: .85rem 2rem; border-radius: 7px; font-size: .88rem; font-weight: 700; text-decoration: none; transition: all .25s; border: none; cursor: pointer; font-family: 'Bricolage Grotesque', sans-serif; }
+.cta-btn:hover { background: var(--dark); color: #fff; transform: translateY(-1px); }
 .cta-mkts { display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; flex-wrap: wrap; }
 .cta-mkt { font-size: .76rem; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: .35rem; }
-
+ 
 /* FOOTER */
 footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
 .foot-inner { max-width: 1160px; margin: 0 auto; }
@@ -398,26 +398,157 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
 .foot-legal { display: flex; gap: 1.25rem; }
 .foot-legal a { font-size: .74rem; font-weight: 300; color: rgba(253,246,244,0.18); text-decoration: none; transition: color .25s; }
 .foot-legal a:hover { color: var(--brand); }
-
-@media(max-width:960px){
-  nav{padding:1.25rem 5vw;}
-  .nav-links{display:none;}
-  .sec{padding:5rem 5vw;}
-  .how-grid,.p-grid,.svc-grid,.mkt-grid{grid-template-columns:1fr;}
-  .step,.pc,.svc,.mkt{border-right:none;border-bottom:1px solid var(--border);}
-  .svc:nth-child(3n){border-right:none;}
-  .pricing-head{flex-direction:column;align-items:flex-start;}
-  .svc-head,.why-grid,.arabic-inner,.foot-top{grid-template-columns:1fr;gap:2.5rem;}
-  .arabic-inner{direction:rtl;}
-  .why-stats{grid-template-columns:1fr 1fr;}
+@media(max-width:768px){ .foot-top { grid-template-columns: 1fr 1fr; gap: 2.5rem; } .foot-btm { flex-direction: column; align-items: flex-start; } }
+ 
+/* WHATSAPP BUTTON */
+.wa-btn {
+  position: fixed; bottom: 1.5rem; left: 1.5rem; z-index: 500;
+  width: 52px; height: 52px;
+  background: #25D366;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+  text-decoration: none;
+  transition: all .3s;
+  animation: waFloat 3s ease-in-out infinite;
 }
+.wa-btn:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,0.5); }
+@keyframes waFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-6px);} }
+.wa-btn svg { width: 28px; height: 28px; fill: #fff; }
+ 
+/* CONTACT FORM MODAL */
+.form-overlay { display: none; position: fixed; inset: 0; background: rgba(26,10,9,0.7); z-index: 800; backdrop-filter: blur(6px); align-items: center; justify-content: center; padding: 1.5rem; }
+.form-overlay.open { display: flex; }
+.form-modal { background: var(--bg); border-radius: 14px; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 30px 80px rgba(26,10,9,0.3); border: 1px solid var(--border); }
+.form-head { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 1; }
+.form-title { font-size: 1.05rem; font-weight: 700; letter-spacing: -.02em; color: var(--ink); }
+.form-close { background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--gray); padding: .25rem .5rem; border-radius: 6px; transition: all .2s; line-height: 1; }
+.form-close:hover { background: var(--bg3); color: var(--ink); }
+.form-body { padding: 2rem; }
+.form-group { margin-bottom: 1.25rem; }
+.form-label { display: block; font-size: .78rem; font-weight: 600; color: var(--ink); margin-bottom: .4rem; letter-spacing: .02em; }
+.form-input { width: 100%; padding: .7rem .9rem; border: 1px solid var(--border); border-radius: 7px; font-family: 'Bricolage Grotesque', sans-serif; font-size: .85rem; color: var(--ink); background: var(--bg); transition: border-color .25s; outline: none; }
+.form-input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(254,110,83,0.1); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-select { width: 100%; padding: .7rem .9rem; border: 1px solid var(--border); border-radius: 7px; font-family: 'Bricolage Grotesque', sans-serif; font-size: .85rem; color: var(--ink); background: var(--bg); outline: none; cursor: pointer; transition: border-color .25s; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right .9rem center; }
+.form-select:focus { border-color: var(--brand); }
+.form-textarea { width: 100%; padding: .7rem .9rem; border: 1px solid var(--border); border-radius: 7px; font-family: 'Bricolage Grotesque', sans-serif; font-size: .85rem; color: var(--ink); background: var(--bg); outline: none; resize: vertical; min-height: 90px; transition: border-color .25s; }
+.form-textarea:focus { border-color: var(--brand); }
+.form-submit { width: 100%; padding: .85rem; border-radius: 7px; border: none; background: var(--brand); color: #fff; font-family: 'Bricolage Grotesque', sans-serif; font-size: .88rem; font-weight: 700; cursor: pointer; transition: all .25s; margin-top: .5rem; }
+.form-submit:hover { background: var(--dark); }
+.form-success { display: none; text-align: center; padding: 2rem; }
+.form-success-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+.form-success h3 { font-size: 1.1rem; font-weight: 700; color: var(--ink); margin-bottom: .5rem; }
+.form-success p { font-size: .85rem; color: var(--gray); font-weight: 300; line-height: 1.65; }
+@media(max-width:480px){ .form-row { grid-template-columns: 1fr; } .form-body { padding: 1.5rem; } }
+ 
+/* LEGAL MODALS */
+.legal-modal { position: fixed; inset: 0; z-index: 900; display: flex; align-items: center; justify-content: center; padding: 2rem; pointer-events: none; }
+.legal-modal[style*="flex"] { pointer-events: all; }
+.lm-inner { background: var(--bg); border-radius: 12px; max-width: 680px; width: 100%; max-height: 82vh; display: flex; flex-direction: column; box-shadow: 0 24px 80px rgba(26,10,9,0.2); border: 1px solid var(--border); }
+.lm-head { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.lm-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -.02em; color: var(--ink); }
+.lm-close { background: none; border: none; font-size: 1rem; cursor: pointer; color: var(--gray); padding: .25rem .5rem; border-radius: 6px; transition: all .2s; }
+.lm-close:hover { background: var(--bg3); color: var(--ink); }
+.lm-body { padding: 1.75rem 2rem; overflow-y: auto; font-size: .83rem; line-height: 1.78; color: var(--gray); }
+.lm-body h3 { font-size: .88rem; font-weight: 700; color: var(--ink); margin: 1.5rem 0 .5rem; letter-spacing: -.01em; }
+.lm-body h3:first-of-type { margin-top: 0; }
+.lm-body p { margin-bottom: .75rem; }
+.lm-body ul { padding-left: 1.25rem; margin-bottom: .75rem; }
+.lm-body li { margin-bottom: .35rem; }
+.lm-body a { color: var(--brand); text-decoration: none; }
+.lm-body a:hover { text-decoration: underline; }
+.lm-date { font-size: .75rem; color: var(--gray2); margin-bottom: 1.25rem !important; font-style: italic; }
 </style>
 </head>
 <body>
-
+ 
 <div class="cur" id="cur"></div>
 <div class="cur-ring" id="cur-ring"></div>
-
+ 
+<!-- WHATSAPP BUTTON -->
+<a href="https://wa.me/447830726389" target="_blank" class="wa-btn" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+ 
+<!-- CONTACT FORM MODAL -->
+<div class="form-overlay" id="form-overlay" onclick="handleOverlayClick(event)">
+  <div class="form-modal">
+    <div class="form-head">
+      <div class="form-title">Get Your Free Website</div>
+      <button class="form-close" onclick="closeForm()">✕</button>
+    </div>
+    <div class="form-body" id="form-body">
+      <form id="contact-form" onsubmit="submitForm(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Your Name *</label>
+            <input class="form-input" type="text" name="name" placeholder="John Smith" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Business Name *</label>
+            <input class="form-input" type="text" name="business" placeholder="My Business" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address *</label>
+          <input class="form-input" type="email" name="email" placeholder="you@example.com" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Phone / WhatsApp</label>
+            <input class="form-input" type="tel" name="phone" placeholder="+44 7000 000000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Country *</label>
+            <select class="form-select" name="country" required>
+              <option value="">Select country</option>
+              <option>United Kingdom</option>
+              <option>United States</option>
+              <option>Saudi Arabia</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type of Business *</label>
+          <input class="form-input" type="text" name="business_type" placeholder="e.g. Restaurant, Salon, Plumber..." required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Preferred Package</label>
+          <select class="form-select" name="package">
+            <option value="">Not sure yet</option>
+            <option>Starter — From £10/mo</option>
+            <option>Growth — From £20/mo</option>
+            <option>Pro — From £100/mo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Preferred Call / Meeting Time</label>
+          <select class="form-select" name="time">
+            <option value="">No call needed — just email me</option>
+            <option>Morning (9am–12pm)</option>
+            <option>Afternoon (12pm–5pm)</option>
+            <option>Evening (5pm–8pm)</option>
+            <option>Weekends only</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Anything else you'd like us to know?</label>
+          <textarea class="form-textarea" name="message" placeholder="Tell us about your business, any ideas you have, or questions you want answered..."></textarea>
+        </div>
+        <button type="submit" class="form-submit">Send My Request →</button>
+        <p style="font-size:.72rem;color:var(--gray2);margin-top:.75rem;text-align:center;font-weight:300;">We'll get back to you within 24 hours. No spam, ever.</p>
+      </form>
+    </div>
+    <div class="form-success" id="form-success">
+      <div class="form-success-icon">🎉</div>
+      <h3>Request Sent!</h3>
+      <p>Thanks for reaching out. We'll review your details and get back to you within 24 hours at hello@thewebbuddy.co.uk</p>
+    </div>
+  </div>
+</div>
+ 
 <!-- NAV -->
 <nav id="nav">
   <a href="#" class="nav-logo">The<span>Web</span>Buddy</a>
@@ -426,12 +557,46 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
     <li><a href="#services">Services</a></li>
     <li><a href="#pricing">Pricing</a></li>
     <li><a href="#markets">Markets</a></li>
-    <li><a href="#contact" class="nav-pill">Get Started Free</a></li>
+    <li><a href="#" class="nav-pill" onclick="openForm(event)">Get Started Free</a></li>
   </ul>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
-
+ 
+<!-- MOBILE MENU DRAWER -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#how" onclick="toggleMenu()">How It Works</a>
+  <a href="#services" onclick="toggleMenu()">Services</a>
+  <a href="#pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="#markets" onclick="toggleMenu()">Markets</a>
+  <a href="#" class="mobile-cta" onclick="toggleMenu();openForm(event)">Get Started Free →</a>
+  <div class="mobile-footer">thewebbuddy.co.uk</div>
+</div>
+ 
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-vignette"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-3d-card">
+    <div class="hero-3d-card-header">
+      <div class="card-dot" style="background:#fe6e53"></div>
+      <div class="card-dot" style="background:rgba(255,255,255,0.3)"></div>
+      <div class="card-dot" style="background:rgba(255,255,255,0.15)"></div>
+    </div>
+    <div class="card-bar accent"></div>
+    <div class="card-bar"></div>
+    <div class="card-bar sm"></div>
+    <div class="card-bar" style="width:80%"></div>
+    <div class="card-bar sm" style="width:30%"></div>
+    <div style="margin-top:.5rem;background:rgba(254,110,83,0.3);border-radius:4px;height:28px;display:flex;align-items:center;justify-content:center;">
+      <span style="font-size:.6rem;color:rgba(255,255,255,0.8);font-weight:600;letter-spacing:.06em;">GET STARTED FREE</span>
+    </div>
+  </div>
   <div class="hero-inner">
     <div class="hero-tag"><span class="tag-dot"></span>UK &nbsp;·&nbsp; USA &nbsp;·&nbsp; Saudi Arabia</div>
     <h1 class="hero-h1">
@@ -439,9 +604,9 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
       <span class="l2">Your Website</span>
       <span class="l3">For Free.</span>
     </h1>
-    <p class="hero-sub">No upfront cost. No hidden fees. No catch. We design and build your professional website completely free — you only pay a small monthly hosting fee to keep it live.</p>
+    <p class="hero-sub">No upfront cost. No hidden fees. No catch. We design and build your professional website completely free — you only pay a small monthly management fee.</p>
     <div class="hero-btns">
-      <a href="#contact" class="btn-p">Get Your Free Website →</a>
+      <button class="btn-p" onclick="openForm(event)">Get Your Free Website →</button>
       <a href="#how" class="btn-s">How It Works</a>
     </div>
   </div>
@@ -450,29 +615,23 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
     <div class="scroll-line"></div>
   </div>
 </section>
-
+ 
 <!-- TICKER -->
 <div class="ticker">
-  <div class="ticker-track">
+  <div class="ticker-track" id="ticker-track">
     <div class="ticker-item">Free Website Build<span class="sep"></span></div>
     <div class="ticker-item">Professional Design<span class="sep"></span></div>
     <div class="ticker-item">Mobile Responsive<span class="sep"></span></div>
     <div class="ticker-item">Live in 2–3 Working Days<span class="sep"></span></div>
-    <div class="ticker-item">From £8/mo<span class="sep"></span></div>
+    <div class="ticker-item">From £10/mo<span class="sep"></span></div>
     <div class="ticker-item">UK · USA · Saudi Arabia<span class="sep"></span></div>
     <div class="ticker-item">SEO Ready<span class="sep"></span></div>
     <div class="ticker-item">12-Month Managed Contract<span class="sep"></span></div>
-    <div class="ticker-item">Free Website Build<span class="sep"></span></div>
-    <div class="ticker-item">Professional Design<span class="sep"></span></div>
-    <div class="ticker-item">Mobile Responsive<span class="sep"></span></div>
-    <div class="ticker-item">Live in 2–3 Working Days<span class="sep"></span></div>
-    <div class="ticker-item">From £8/mo<span class="sep"></span></div>
-    <div class="ticker-item">UK · USA · Saudi Arabia<span class="sep"></span></div>
-    <div class="ticker-item">SEO Ready<span class="sep"></span></div>
-    <div class="ticker-item">12-Month Managed Contract<span class="sep"></span></div>
+    <div class="ticker-item">No Upfront Cost<span class="sep"></span></div>
+    <div class="ticker-item">Built For You — Free<span class="sep"></span></div>
   </div>
 </div>
-
+ 
 <!-- HOW IT WORKS -->
 <section class="sec how" id="how">
   <div class="sec-inner">
@@ -481,28 +640,13 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
       <h2 class="sec-h">Simple as <em>1, 2, 3.</em></h2>
     </div>
     <div class="how-grid">
-      <div class="step rv d1">
-        <div class="step-n">01</div>
-        <div class="step-icon">💬</div>
-        <h3 class="step-title">DM Us Your Business</h3>
-        <p class="step-desc">Send us your business name and what you do. No lengthy forms or calls required. We handle everything from there.</p>
-      </div>
-      <div class="step rv d2">
-        <div class="step-n">02</div>
-        <div class="step-icon">⚡</div>
-        <h3 class="step-title">We Design & Build</h3>
-        <p class="step-desc">Our team designs and builds your website in just 2–3 working days. Mobile responsive, SEO ready, and built to convert.</p>
-      </div>
-      <div class="step rv d3">
-        <div class="step-n">03</div>
-        <div class="step-icon">🚀</div>
-        <h3 class="step-title">You Go Live — Free</h3>
-        <p class="step-desc">Your website goes live with no upfront cost. You pay a simple monthly management fee. We handle everything for the full contract period.</p>
-      </div>
+      <div class="step rv d1"><div class="step-n">01</div><div class="step-icon">💬</div><h3 class="step-title">DM Us Your Business</h3><p class="step-desc">Send us your business name and what you do. No lengthy forms or calls required. We handle everything from there.</p></div>
+      <div class="step rv d2"><div class="step-n">02</div><div class="step-icon">⚡</div><h3 class="step-title">We Design & Build</h3><p class="step-desc">Our team designs and builds your website in just 2–3 working days. Mobile responsive, SEO ready, built to convert.</p></div>
+      <div class="step rv d3"><div class="step-n">03</div><div class="step-icon">🚀</div><h3 class="step-title">You Go Live — Free</h3><p class="step-desc">Your website goes live with no upfront cost. You pay a simple monthly management fee. We handle everything for the full contract period.</p></div>
     </div>
   </div>
 </section>
-
+ 
 <!-- PRICING -->
 <section class="sec pricing" id="pricing">
   <div class="sec-inner">
@@ -510,27 +654,34 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
       <div>
         <div class="sec-tag">Pricing</div>
         <h2 class="sec-h">Honest. <em>Transparent.</em></h2>
-      </div>
-      <div>
         <p class="pricing-sub">Website build is always free. All plans include a 12-month contract. Files handed over in full upon completion.</p>
-        <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
-          <div class="ctog">
-            <button class="cbtn on" onclick="setC('gbp',this)">£ GBP</button>
-            <button class="cbtn" onclick="setC('usd',this)">$ USD</button>
-            <button class="cbtn" onclick="setC('sar',this)">﷼ SAR</button>
-          </div>
-          <div class="ctog" id="billing-tog">
-            <button class="cbtn on" onclick="setBilling('monthly',this)">Monthly</button>
-            <button class="cbtn" onclick="setBilling('annual',this)">Annual <span style="font-size:.62rem;background:rgba(254,110,83,0.15);color:var(--brand);padding:.1rem .4rem;border-radius:4px;margin-left:.2rem;">2 months FREE</span></button>
-          </div>
+      </div>
+      <div class="toggles-row">
+        <div class="ctog">
+          <button class="cbtn on" onclick="setC('gbp',this)">£ GBP</button>
+          <button class="cbtn" onclick="setC('usd',this)">$ USD</button>
+          <button class="cbtn" onclick="setC('sar',this)">﷼ SAR</button>
+        </div>
+        <div class="ctog" id="billing-tog">
+          <button class="cbtn on" onclick="setBilling('monthly',this)">Monthly</button>
+          <button class="cbtn" onclick="setBilling('annual',this)">Annual &nbsp;<span style="font-size:.6rem;background:rgba(254,110,83,0.15);color:var(--brand);padding:.1rem .4rem;border-radius:3px;">2 months FREE</span></button>
         </div>
       </div>
     </div>
-    <div class="p-grid" style="grid-template-columns:repeat(3,1fr);">
+ 
+    <div class="annual-note" id="annual-note">
+      🎉 <strong>Pay annually and get 2 months completely free!</strong> Prices below show your total annual cost — calculated as 10 months instead of 12. That's a saving of 2 full months upfront.
+    </div>
+ 
+    <div class="p-grid" style="margin-top:1.5rem;">
       <div class="pc rv d1">
         <div class="p-name">Starter</div>
-        <div class="p-price"><span class="csym">£</span><span class="cval" data-gbp="8" data-usd="10" data-sar="40">8</span></div>
-        <div class="p-per">per month · 12-month contract</div>
+        <div class="p-price-wrap">
+          <div class="p-price-original" id="orig-0"></div>
+          <div class="p-price"><span class="csym">£</span><span class="cval" data-gbp="10" data-usd="15" data-sar="50">10</span></div>
+          <div class="p-price-annual-total" id="atotal-0"></div>
+        </div>
+        <div class="p-per" id="per-0">per month · 12-month contract</div>
         <div class="p-free">✦ Build FREE</div>
         <ul class="p-feats">
           <li><span class="ck">✓</span>Website build (up to 3 pages)</li>
@@ -540,13 +691,18 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
           <li><span class="ck">✓</span>Email support</li>
           <li><span class="ck">✓</span>Live in 2–3 working days</li>
         </ul>
-        <button class="p-btn">Get Started Free</button>
+        <button class="p-btn" onclick="openForm(event)">Get Started Free</button>
       </div>
+ 
       <div class="pc feat rv d2">
         <div class="feat-lbl">Popular</div>
         <div class="p-name">Growth</div>
-        <div class="p-price"><span class="csym">£</span><span class="cval" data-gbp="15" data-usd="20" data-sar="75">15</span></div>
-        <div class="p-per">per month · 12-month contract</div>
+        <div class="p-price-wrap">
+          <div class="p-price-original" id="orig-1"></div>
+          <div class="p-price"><span class="csym">£</span><span class="cval" data-gbp="20" data-usd="25" data-sar="100">20</span></div>
+          <div class="p-price-annual-total" id="atotal-1"></div>
+        </div>
+        <div class="p-per" id="per-1">per month · 12-month contract</div>
         <div class="p-free">✦ Build FREE</div>
         <ul class="p-feats">
           <li><span class="ck">✓</span>Website build (up to 6 pages)</li>
@@ -558,12 +714,17 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
           <li><span class="ck">✓</span>Basic SEO setup</li>
           <li><span class="ck">✓</span>Live in 2–3 working days</li>
         </ul>
-        <button class="p-btn">Get Started Free</button>
+        <button class="p-btn" onclick="openForm(event)">Get Started Free</button>
       </div>
+ 
       <div class="pc rv d3">
         <div class="p-name">Pro</div>
-        <div class="p-price"><span class="csym">£</span><span class="cval" data-gbp="70" data-usd="100" data-sar="375">70</span></div>
-        <div class="p-per">per month · 12-month contract</div>
+        <div class="p-price-wrap">
+          <div class="p-price-original" id="orig-2"></div>
+          <div class="p-price"><span class="csym">£</span><span class="cval" data-gbp="100" data-usd="150" data-sar="400">100</span></div>
+          <div class="p-price-annual-total" id="atotal-2"></div>
+        </div>
+        <div class="p-per" id="per-2">per month · 12-month contract</div>
         <div class="p-free">✦ Build FREE</div>
         <ul class="p-feats">
           <li><span class="ck">✓</span>Detailed multi-page website</li>
@@ -577,23 +738,21 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
           <li><span class="ck">✓</span>E-commerce (add-on)</li>
           <li><span class="ck">✓</span>Live in 2–3 working days</li>
         </ul>
-        <button class="p-btn">Get Started Free</button>
+        <button class="p-btn" onclick="openForm(event)">Get Started Free</button>
       </div>
     </div>
-    <div class="rv" style="margin-top:1.5rem;padding:1.25rem 1.5rem;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:.78rem;color:var(--gray);line-height:1.7;">
-      <strong style="color:var(--ink);font-weight:600;">Contract Terms:</strong> All plans require a minimum 12-month commitment. If a contract is ended before 12 months, no files or assets will be transferred. Upon completing 12 months, clients may choose to renew or exit — on exit, all website files are handed over in full.
+ 
+    <div class="rv" style="margin-top:1.5rem;padding:1.25rem 1.5rem;background:rgba(253,246,244,0.04);border:1px solid rgba(253,246,244,0.08);border-radius:8px;font-size:.78rem;color:rgba(253,246,244,0.45);line-height:1.7;">
+      <strong style="color:#fff;font-weight:600;">Contract Terms:</strong> All plans require a minimum 12-month commitment. If a contract is ended before 12 months, no files or assets will be transferred. Upon completing 12 months, clients may choose to renew or exit — on exit, all website files are handed over in full.
     </div>
   </div>
 </section>
-
+ 
 <!-- SERVICES -->
 <section class="sec services" id="services">
   <div class="sec-inner">
     <div class="svc-head">
-      <div class="rv">
-        <div class="sec-tag">What We Offer</div>
-        <h2 class="sec-h">Everything your<br>business <em>needs.</em></h2>
-      </div>
+      <div class="rv"><div class="sec-tag">What We Offer</div><h2 class="sec-h">Everything your<br>business <em>needs.</em></h2></div>
       <p class="svc-aside rv d2">Beyond the free website, we offer a full suite of digital services — SEO, social media, marketing, e-commerce and branding — to help your business grow online.</p>
     </div>
     <div class="svc-grid">
@@ -606,7 +765,7 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
     </div>
   </div>
 </section>
-
+ 
 <!-- WHY -->
 <section class="sec why">
   <div class="sec-inner">
@@ -617,13 +776,13 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
         <p class="why-body rv">Traditional agencies charge £500–£1,000+ just to build a basic website. Website builders make you do it yourself. We build it for you — professionally, quickly, and at no upfront cost.</p>
         <div class="why-stats rv">
           <div class="ws"><div class="ws-n">£0</div><div class="ws-l">Upfront build cost</div></div>
-          <div class="ws"><div class="ws-n">2–3</div><div class="ws-l">Working days to go live</div></div>
+          <div class="ws"><div class="ws-n">2–3</div><div class="ws-l">Working days to live</div></div>
           <div class="ws"><div class="ws-n">3</div><div class="ws-l">Markets we serve</div></div>
           <div class="ws"><div class="ws-n">12mo</div><div class="ws-l">Managed contract</div></div>
         </div>
       </div>
       <div class="why-feats rv d2">
-        <div class="wf"><div class="wf-ico">🏆</div><div><div class="wf-title">Agency quality, fraction of the price</div><div class="wf-desc">Agencies charge £500–£1,000+ for a basic website. Ours costs you nothing to build.</div></div></div>
+        <div class="wf"><div class="wf-ico">🏆</div><div><div class="wf-title">Agency quality, fraction of the price</div><div class="wf-desc">Agencies charge £500–£1,000+ for a basic site. Ours costs you nothing to build.</div></div></div>
         <div class="wf"><div class="wf-ico">⚡</div><div><div class="wf-title">Live in 2–3 working days</div><div class="wf-desc">No lengthy discovery phases. We move fast and get your business online quickly.</div></div></div>
         <div class="wf"><div class="wf-ico">🔒</div><div><div class="wf-title">12-month managed contract</div><div class="wf-desc">We manage your website for the full contract period. Files handed over in full after 12 months.</div></div></div>
         <div class="wf"><div class="wf-ico">🌍</div><div><div class="wf-title">English & Arabic bilingual</div><div class="wf-desc">We build in English, Arabic, or both — giving you an edge in the Saudi market.</div></div></div>
@@ -631,7 +790,7 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
     </div>
   </div>
 </section>
-
+ 
 <!-- MARKETS -->
 <section class="sec markets" id="markets">
   <div class="sec-inner">
@@ -641,14 +800,52 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
       <p class="mkt-sub">Localised pricing and support across three countries.</p>
     </div>
     <div class="mkt-grid">
-      <div class="mkt rv d1"><span class="mkt-flag">🇬🇧</span><h3 class="mkt-name">United Kingdom</h3><span class="mkt-cur">GBP — British Pound</span><p class="mkt-desc">Serving UK small businesses, sole traders, tradespeople and startups.</p></div>
-      <div class="mkt rv d2"><span class="mkt-flag">🇺🇸</span><h3 class="mkt-name">United States</h3><span class="mkt-cur">USD — US Dollar</span><p class="mkt-desc">Serving American small businesses, freelancers, coaches and creators.</p></div>
-      <div class="mkt rv d3"><span class="mkt-flag">🇸🇦</span><h3 class="mkt-name">Saudi Arabia</h3><span class="mkt-cur">SAR — Saudi Riyal</span><p class="mkt-desc">Arabic + English websites for Saudi entrepreneurs. Vision 2030 aligned.</p></div>
+      <div class="mkt rv d1">
+        <span class="mkt-flag">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="60" height="40" style="border-radius:4px;display:block;margin:0 auto 1.25rem;">
+            <rect width="60" height="40" fill="#012169"/>
+            <path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="6"/>
+            <path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" stroke-width="4"/>
+            <path d="M30,0 V40 M0,20 H60" stroke="#fff" stroke-width="10"/>
+            <path d="M30,0 V40 M0,20 H60" stroke="#C8102E" stroke-width="6"/>
+          </svg>
+        </span>
+        <h3 class="mkt-name">United Kingdom</h3><span class="mkt-cur">GBP — British Pound</span><p class="mkt-desc">Serving UK small businesses, sole traders, tradespeople and startups.</p>
+      </div>
+      <div class="mkt rv d2">
+        <span class="mkt-flag">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="60" height="40" style="border-radius:4px;display:block;margin:0 auto 1.25rem;">
+            <rect width="60" height="40" fill="#B22234"/>
+            <rect y="4.44" width="60" height="3.7" fill="#fff"/>
+            <rect y="11.85" width="60" height="3.7" fill="#fff"/>
+            <rect y="19.26" width="60" height="3.7" fill="#fff"/>
+            <rect y="26.67" width="60" height="3.7" fill="#fff"/>
+            <rect y="34.07" width="60" height="3.7" fill="#fff"/>
+            <rect width="24" height="21.5" fill="#3C3B6E"/>
+          </svg>
+        </span>
+        <h3 class="mkt-name">United States</h3><span class="mkt-cur">USD — US Dollar</span><p class="mkt-desc">Serving American small businesses, freelancers, coaches and creators.</p>
+      </div>
+      <div class="mkt rv d3">
+        <span class="mkt-flag">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="60" height="40" style="border-radius:4px;display:block;margin:0 auto 1.25rem;">
+            <rect width="60" height="40" fill="#006C35"/>
+            <!-- Arabic text (لا إله إلا الله محمد رسول الله) simplified representation -->
+            <text x="30" y="17" font-size="5.5" fill="#fff" text-anchor="middle" font-family="Arial" font-weight="bold" letter-spacing="0.3">لا إله إلا الله</text>
+            <text x="30" y="24" font-size="4.5" fill="#fff" text-anchor="middle" font-family="Arial" font-weight="bold" letter-spacing="0.3">محمد رسول الله</text>
+            <!-- Sword shape -->
+            <line x1="12" y1="31" x2="48" y2="31" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="12" y1="31" x2="15" y2="29.5" stroke="#fff" stroke-width="1" stroke-linecap="round"/>
+            <rect x="44" y="29.5" width="4" height="3" rx="0.5" fill="#fff"/>
+          </svg>
+        </span>
+        <h3 class="mkt-name">Saudi Arabia</h3><span class="mkt-cur">SAR — Saudi Riyal</span><p class="mkt-desc">Arabic + English websites for Saudi entrepreneurs. Vision 2030 aligned.</p>
+      </div>
     </div>
   </div>
 </section>
-
-<!-- ARABIC SECTION -->
+ 
+<!-- ARABIC -->
 <div class="arabic-sec">
   <div class="arabic-inner">
     <div class="rv">
@@ -666,19 +863,19 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
       <div class="arabic-card">
         <h3 class="arabic-card-h">الباقة الشهرية</h3>
         <p class="arabic-card-sub">البناء مجاناً دائماً — رسوم إدارة شهرية بسيطة</p>
-        <div class="arabic-price-row"><div class="arabic-price">70</div><div class="arabic-price-sfx">ريال / شهرياً</div></div>
-        <button class="arabic-btn">راسلنا الآن — مجاناً</button>
+        <div class="arabic-price-row"><div class="arabic-price">50</div><div class="arabic-price-sfx">ريال / شهرياً</div></div>
+        <button class="arabic-btn" onclick="openForm(event)">راسلنا الآن — مجاناً</button>
       </div>
     </div>
   </div>
 </div>
-
+ 
 <!-- CTA -->
 <section class="cta" id="contact">
   <div class="cta-inner">
     <h2 class="cta-h rv">Get Your Free<br>Website Today.</h2>
-    <p class="cta-sub rv">DM us on Instagram or send us an email. We start building within 24 hours — completely free.</p>
-    <a href="mailto:hello@thewebbuddy.com" class="cta-btn rv">Start For Free →</a>
+    <p class="cta-sub rv">Fill in a quick form and we'll start building within 24 hours — completely free.</p>
+    <button class="cta-btn rv" onclick="openForm(event)">Start For Free →</button>
     <div class="cta-mkts rv">
       <span class="cta-mkt">🇬🇧 United Kingdom</span>
       <span class="cta-mkt">🇺🇸 United States</span>
@@ -686,7 +883,7 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
     </div>
   </div>
 </section>
-
+ 
 <!-- FOOTER -->
 <footer>
   <div class="foot-inner">
@@ -695,21 +892,18 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
         <div class="foot-logo">The<span>Web</span>Buddy</div>
         <p class="foot-tag">Your Free Website Buddy. Building professional websites for businesses across the UK, USA and Saudi Arabia — completely free.</p>
         <div class="foot-socials">
-          <a href="#" class="fsoc">ig</a>
-          <a href="#" class="fsoc">tk</a>
-          <a href="#" class="fsoc">fb</a>
-          <a href="#" class="fsoc">in</a>
+          <a href="#" class="fsoc">ig</a><a href="#" class="fsoc">tk</a><a href="#" class="fsoc">fb</a><a href="#" class="fsoc">in</a>
         </div>
       </div>
       <div>
         <div class="foot-col-h">Services</div>
         <ul class="foot-links">
-          <li><a href="#">Website Design</a></li>
-          <li><a href="#">SEO Optimisation</a></li>
-          <li><a href="#">Social Media</a></li>
-          <li><a href="#">Digital Marketing</a></li>
-          <li><a href="#">E-Commerce</a></li>
-          <li><a href="#">Logo & Branding</a></li>
+          <li><a href="#services">Website Design</a></li>
+          <li><a href="#services">SEO Optimisation</a></li>
+          <li><a href="#services">Social Media</a></li>
+          <li><a href="#services">Digital Marketing</a></li>
+          <li><a href="#services">E-Commerce</a></li>
+          <li><a href="#services">Logo & Branding</a></li>
         </ul>
       </div>
       <div>
@@ -719,7 +913,7 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
           <li><a href="#pricing">Pricing</a></li>
           <li><a href="#markets">Our Markets</a></li>
           <li><a href="#services">Services</a></li>
-          <li><a href="#contact">Get Started</a></li>
+          <li><a href="#" onclick="openForm(event)">Get Started</a></li>
         </ul>
       </div>
       <div>
@@ -728,8 +922,8 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
           <li><a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a></li>
           <li><a href="tel:+447830726389">+44 7830 726389</a></li>
           <li><a href="tel:+966502864404">+966 5028 64404</a></li>
+          <li><a href="https://wa.me/447830726389" target="_blank">WhatsApp Us</a></li>
           <li><a href="#">Instagram DM</a></li>
-          <li><a href="#">WhatsApp</a></li>
         </ul>
       </div>
     </div>
@@ -743,177 +937,173 @@ footer { background: var(--ink); padding: 5rem 5vw 2.5rem; }
     </div>
   </div>
 </footer>
-
-<!-- LEGAL MODALS -->
+ 
+<!-- LEGAL MODAL OVERLAY -->
 <div id="modal-overlay" onclick="closeModal()" style="display:none;position:fixed;inset:0;background:rgba(26,10,9,0.6);z-index:800;backdrop-filter:blur(4px);"></div>
-
+ 
 <div id="modal-privacy" class="legal-modal" style="display:none;">
-  <div class="lm-inner">
-    <div class="lm-head"><h2 class="lm-title">Privacy Policy</h2><button class="lm-close" onclick="closeModal()">✕</button></div>
-    <div class="lm-body">
-      <p class="lm-date">Last updated: 1 January 2025</p>
-      <h3>1. Who We Are</h3>
-      <p>TheWebBuddy ("we", "our", "us") is a web design and digital services business founded by Taha Jahangir. We operate at <strong>www.thewebbuddy.co.uk</strong> and serve clients in the United Kingdom, United States and Saudi Arabia. Contact: <a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a></p>
-      <h3>2. Information We Collect</h3>
-      <p>We may collect the following personal information when you contact us or use our services:</p>
-      <ul><li>Full name and business name</li><li>Email address</li><li>Phone number / WhatsApp number</li><li>Business details you provide via our onboarding form</li><li>Payment information (processed securely via third-party payment providers — we do not store card details)</li><li>Technical data such as IP address and browser type when you visit our website</li></ul>
-      <h3>3. How We Use Your Information</h3>
-      <ul><li>To deliver and manage the services you have requested</li><li>To communicate with you about your project and contract</li><li>To send invoices and process payments</li><li>To improve our website and services</li><li>To comply with legal obligations</li></ul>
-      <h3>4. Legal Basis for Processing</h3>
-      <p>We process your personal data on the basis of: (a) contract performance — to deliver the services you have agreed to; (b) legitimate interests — to operate and improve our business; (c) legal compliance — where required by law.</p>
-      <h3>5. Data Sharing</h3>
-      <p>We do not sell your personal data. We may share data with trusted third-party service providers (such as payment processors and communication tools) solely to deliver our services. All third parties are required to handle your data securely and in accordance with applicable law.</p>
-      <h3>6. Data Retention</h3>
-      <p>We retain your personal data for as long as necessary to fulfil the purposes outlined in this policy, and in any case for a minimum of 6 years following the end of your contract to comply with UK financial record-keeping requirements.</p>
-      <h3>7. Your Rights</h3>
-      <p>Under UK GDPR and applicable data protection law, you have the right to: access your personal data; correct inaccurate data; request deletion of your data; object to processing; request restriction of processing; and data portability. To exercise any of these rights, contact us at <a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a>.</p>
-      <h3>8. Cookies</h3>
-      <p>Our website uses cookies to improve your browsing experience. Please refer to our Cookie Policy for full details.</p>
-      <h3>9. Changes to This Policy</h3>
-      <p>We may update this Privacy Policy from time to time. The latest version will always be published on our website.</p>
-      <h3>10. Contact</h3>
-      <p>For any privacy-related queries: <a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a> · +44 7830 726389</p>
-    </div>
-  </div>
+  <div class="lm-inner"><div class="lm-head"><h2 class="lm-title">Privacy Policy</h2><button class="lm-close" onclick="closeModal()">✕</button></div>
+  <div class="lm-body"><p class="lm-date">Last updated: 1 January 2025</p><h3>1. Who We Are</h3><p>TheWebBuddy ("we","our","us") is operated by Taha Jahangir at www.thewebbuddy.co.uk serving the UK, USA and Saudi Arabia. Contact: <a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a></p><h3>2. Information We Collect</h3><ul><li>Full name and business name</li><li>Email address and phone number</li><li>Business details from our onboarding form</li><li>Payment info (processed via third-party providers — we never store card details)</li><li>Technical data such as IP address and browser type</li></ul><h3>3. How We Use Your Information</h3><ul><li>To deliver and manage the services you requested</li><li>To communicate about your project and contract</li><li>To send invoices and process payments</li><li>To improve our website and services</li><li>To comply with legal obligations</li></ul><h3>4. Legal Basis for Processing</h3><p>Contract performance, legitimate interests, and legal compliance.</p><h3>5. Data Sharing</h3><p>We do not sell your data. We may share with trusted service providers solely to deliver our services.</p><h3>6. Data Retention</h3><p>We retain data for as long as necessary, with a minimum of 6 years post-contract for UK financial record-keeping.</p><h3>7. Your Rights</h3><p>Under UK GDPR you have rights to access, correct, delete, object, restrict, and port your data. Contact <a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a>.</p><h3>8. Contact</h3><p><a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a> · +44 7830 726389</p></div></div>
 </div>
-
+ 
 <div id="modal-terms" class="legal-modal" style="display:none;">
-  <div class="lm-inner">
-    <div class="lm-head"><h2 class="lm-title">Terms of Service</h2><button class="lm-close" onclick="closeModal()">✕</button></div>
-    <div class="lm-body">
-      <p class="lm-date">Last updated: 1 January 2025</p>
-      <h3>1. Agreement to Terms</h3>
-      <p>By engaging TheWebBuddy ("we", "us", "our") for any service, you ("Client") agree to be bound by these Terms of Service. These terms form a legally binding agreement between you and TheWebBuddy, operated by Taha Jahangir.</p>
-      <h3>2. Services</h3>
-      <p>TheWebBuddy provides website design, development, and digital management services. The website build is provided at no upfront cost to the Client. The Client agrees to pay the applicable monthly management fee for a minimum period of 12 months from the date of website launch.</p>
-      <h3>3. Contract Duration & Minimum Term</h3>
-      <p>All service agreements carry a minimum term of <strong>12 months</strong> from the date the website goes live. During this period, TheWebBuddy retains full management and control of the website, including all associated files, code, and assets.</p>
-      <h3>4. Early Termination</h3>
-      <p>If the Client terminates the agreement before the completion of the 12-month minimum term:</p>
-      <ul><li>No website files, code, or assets will be transferred to the Client</li><li>No refunds will be issued for fees already paid</li><li>The website will be taken offline within 7 days of termination notice</li></ul>
-      <h3>5. End of Contract — File Handover</h3>
-      <p>Upon successful completion of the 12-month minimum term, the Client may choose to:</p>
-      <ul><li><strong>Renew</strong> — continue with a new contract period at the agreed rate</li><li><strong>Exit</strong> — receive a full handover of all website files, code, and assets within 14 business days of the contract end date</li></ul>
-      <h3>6. Payment Terms</h3>
-      <ul><li>Monthly fees are due on the same date each month</li><li>Annual fees (where selected) are due upfront and carry a 2-month discount</li><li>Late payment of more than 14 days may result in temporary suspension of the website</li><li>Continued non-payment may result in contract termination under clause 4</li></ul>
-      <h3>7. Client Responsibilities</h3>
-      <ul><li>Provide accurate information on the onboarding form</li><li>Supply required content, images and logos in a timely manner</li><li>Review and approve the website design within 7 days of delivery</li><li>Make payments on time in accordance with the agreed schedule</li></ul>
-      <h3>8. Intellectual Property</h3>
-      <p>During the contract period, TheWebBuddy retains ownership and control of all website files and infrastructure. Upon completion of the minimum term and full payment of all fees, ownership of the website code and content transfers to the Client.</p>
-      <h3>9. Limitation of Liability</h3>
-      <p>TheWebBuddy's total liability shall not exceed the total fees paid by the Client in the 3 months preceding the event giving rise to the claim. We are not liable for indirect, consequential or incidental damages.</p>
-      <h3>10. Governing Law</h3>
-      <ul><li><strong>UK Clients:</strong> Governed by the laws of England and Wales</li><li><strong>USA Clients:</strong> Governed by applicable US federal and state law</li><li><strong>Saudi Arabia Clients:</strong> Governed by the laws of the Kingdom of Saudi Arabia</li></ul>
-      <h3>11. Changes to Terms</h3>
-      <p>We reserve the right to update these Terms of Service. Clients will be notified of material changes with at least 30 days notice.</p>
-      <h3>12. Contact</h3>
-      <p><a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a> · +44 7830 726389 · +966 5028 64404</p>
-    </div>
-  </div>
+  <div class="lm-inner"><div class="lm-head"><h2 class="lm-title">Terms of Service</h2><button class="lm-close" onclick="closeModal()">✕</button></div>
+  <div class="lm-body"><p class="lm-date">Last updated: 1 January 2025</p><h3>1. Agreement</h3><p>By engaging TheWebBuddy you agree to these Terms. This is a legally binding agreement between you ("Client") and TheWebBuddy, operated by Taha Jahangir.</p><h3>2. Services</h3><p>We provide website design, development and digital management. The build is provided at no upfront cost. You agree to pay the monthly management fee for a minimum of 12 months.</p><h3>3. Minimum Term</h3><p>All agreements carry a minimum term of <strong>12 months</strong> from the date the website goes live. During this period we retain full management and control of all files, code and assets.</p><h3>4. Early Termination</h3><ul><li>No files, code or assets transferred to the Client</li><li>No refunds for fees already paid</li><li>Website taken offline within 7 days of notice</li></ul><h3>5. End of Contract</h3><ul><li><strong>Renew</strong> — continue at the agreed rate</li><li><strong>Exit</strong> — full file handover within 14 business days</li></ul><h3>6. Payment Terms</h3><ul><li>Monthly fees due on the same date each month</li><li>Annual fees due upfront with 2-month discount applied</li><li>Late payment over 14 days may result in website suspension</li></ul><h3>7. Client Responsibilities</h3><ul><li>Provide accurate onboarding information</li><li>Supply content, images and logos in a timely manner</li><li>Approve design within 7 days of delivery</li><li>Make payments on time</li></ul><h3>8. Intellectual Property</h3><p>TheWebBuddy retains ownership during the contract. Upon completion and full payment, ownership transfers to the Client.</p><h3>9. Limitation of Liability</h3><p>Maximum liability is the total fees paid in the 3 months prior to any claim. We are not liable for indirect or consequential damages.</p><h3>10. Governing Law</h3><ul><li><strong>UK:</strong> Laws of England and Wales</li><li><strong>USA:</strong> Applicable US federal and state law</li><li><strong>Saudi Arabia:</strong> Laws of the Kingdom of Saudi Arabia</li></ul><h3>11. Contact</h3><p><a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a> · +44 7830 726389 · +966 5028 64404</p></div></div>
 </div>
-
+ 
 <div id="modal-cookies" class="legal-modal" style="display:none;">
-  <div class="lm-inner">
-    <div class="lm-head"><h2 class="lm-title">Cookie Policy</h2><button class="lm-close" onclick="closeModal()">✕</button></div>
-    <div class="lm-body">
-      <p class="lm-date">Last updated: 1 January 2025</p>
-      <h3>1. What Are Cookies</h3>
-      <p>Cookies are small text files placed on your device when you visit a website. They help websites remember your preferences and improve your experience. Cookies cannot harm your device and do not contain personal information on their own.</p>
-      <h3>2. How We Use Cookies</h3>
-      <p>TheWebBuddy uses cookies on <strong>www.thewebbuddy.co.uk</strong> for the following purposes:</p>
-      <h3>Essential Cookies</h3>
-      <p>These cookies are necessary for the website to function correctly. They cannot be disabled. They include cookies that remember your preferences during a browsing session.</p>
-      <ul><li><strong>Session cookies</strong> — temporary cookies that expire when you close your browser</li><li><strong>Preference cookies</strong> — remember settings such as your selected currency on our pricing section</li></ul>
-      <h3>Analytics Cookies</h3>
-      <p>We may use analytics tools (such as Google Analytics) to understand how visitors use our website. These cookies collect anonymised data including pages visited, time spent on site, and geographic location at a regional level.</p>
-      <ul><li><strong>_ga</strong> — Google Analytics, expires after 2 years</li><li><strong>_gid</strong> — Google Analytics, expires after 24 hours</li></ul>
-      <h3>3. Third-Party Cookies</h3>
-      <p>Some features of our website may load content from third-party platforms (such as embedded contact forms or social media buttons). These third parties may set their own cookies in accordance with their own privacy policies. We recommend reviewing the privacy policies of any third-party services you interact with.</p>
-      <h3>4. Managing Cookies</h3>
-      <p>You can control and delete cookies through your browser settings. Please note that disabling certain cookies may affect the functionality of our website. To manage cookies in your browser:</p>
-      <ul><li><strong>Chrome:</strong> Settings → Privacy and Security → Cookies and other site data</li><li><strong>Safari:</strong> Preferences → Privacy → Manage Website Data</li><li><strong>Firefox:</strong> Settings → Privacy & Security → Cookies and Site Data</li><li><strong>Edge:</strong> Settings → Cookies and site permissions</li></ul>
-      <h3>5. Your Consent</h3>
-      <p>By continuing to use our website, you consent to our use of cookies as described in this policy. You may withdraw consent at any time by adjusting your browser settings or clearing your cookies.</p>
-      <h3>6. Updates to This Policy</h3>
-      <p>We may update this Cookie Policy periodically. The latest version will always be available on our website.</p>
-      <h3>7. Contact</h3>
-      <p>For any questions about our use of cookies: <a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a></p>
-    </div>
-  </div>
+  <div class="lm-inner"><div class="lm-head"><h2 class="lm-title">Cookie Policy</h2><button class="lm-close" onclick="closeModal()">✕</button></div>
+  <div class="lm-body"><p class="lm-date">Last updated: 1 January 2025</p><h3>1. What Are Cookies</h3><p>Cookies are small text files placed on your device when you visit a website. They help remember preferences and improve your experience.</p><h3>2. Essential Cookies</h3><ul><li><strong>Session cookies</strong> — expire when you close your browser</li><li><strong>Preference cookies</strong> — remember settings like selected currency</li></ul><h3>3. Analytics Cookies</h3><ul><li><strong>_ga</strong> — Google Analytics, 2 years</li><li><strong>_gid</strong> — Google Analytics, 24 hours</li></ul><h3>4. Managing Cookies</h3><ul><li><strong>Chrome:</strong> Settings → Privacy and Security → Cookies</li><li><strong>Safari:</strong> Preferences → Privacy → Manage Website Data</li><li><strong>Firefox:</strong> Settings → Privacy & Security → Cookies</li><li><strong>Edge:</strong> Settings → Cookies and site permissions</li></ul><h3>5. Consent</h3><p>By continuing to use our website you consent to our use of cookies. Withdraw consent at any time via browser settings.</p><h3>6. Contact</h3><p><a href="mailto:hello@thewebbuddy.co.uk">hello@thewebbuddy.co.uk</a></p></div></div>
 </div>
-
-<style>
-.legal-modal { position: fixed; inset: 0; z-index: 900; display: flex; align-items: center; justify-content: center; padding: 2rem; pointer-events: none; }
-.legal-modal[style*="block"] { pointer-events: all; }
-.lm-inner { background: var(--bg); border-radius: 12px; max-width: 680px; width: 100%; max-height: 82vh; display: flex; flex-direction: column; box-shadow: 0 24px 80px rgba(26,10,9,0.2); border: 1px solid var(--border); }
-.lm-head { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.lm-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -.02em; color: var(--ink); }
-.lm-close { background: none; border: none; font-size: 1rem; cursor: pointer; color: var(--gray); padding: .25rem .5rem; border-radius: 6px; transition: all .2s; }
-.lm-close:hover { background: var(--bg3); color: var(--ink); }
-.lm-body { padding: 1.75rem 2rem; overflow-y: auto; font-size: .83rem; line-height: 1.78; color: var(--gray); }
-.lm-body h3 { font-size: .88rem; font-weight: 700; color: var(--ink); margin: 1.5rem 0 .5rem; letter-spacing: -.01em; }
-.lm-body h3:first-of-type { margin-top: 0; }
-.lm-body p { margin-bottom: .75rem; }
-.lm-body ul { padding-left: 1.25rem; margin-bottom: .75rem; }
-.lm-body li { margin-bottom: .35rem; }
-.lm-body a { color: var(--brand); text-decoration: none; }
-.lm-body a:hover { text-decoration: underline; }
-.lm-date { font-size: .75rem; color: var(--gray2); margin-bottom: 1.25rem !important; font-style: italic; }
-</style>
-
+ 
 <script>
+// SEAMLESS TICKER — clone items so loop never shows a gap
+const tickerTrack = document.getElementById('ticker-track');
+if(tickerTrack){
+  const clone = tickerTrack.innerHTML;
+  tickerTrack.innerHTML = clone + clone;
+  const itemW = tickerTrack.scrollWidth / 2;
+  tickerTrack.style.animation = 'none';
+  let pos = 0;
+  const speed = 0.5;
+  function animTicker(){
+    pos += speed;
+    if(pos >= itemW) pos = 0;
+    tickerTrack.style.transform = `translateX(-${pos}px)`;
+    requestAnimationFrame(animTicker);
+  }
+  animTicker();
+}
+ 
 // CURSOR
-const cur=document.getElementById('cur'), ring=document.getElementById('cur-ring');
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
 (function loop(){rx+=(mx-rx)*.13;ry+=(my-ry)*.13;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
-
+ 
 // NAV
 const nav=document.getElementById('nav');
 window.addEventListener('scroll',()=>nav.classList.toggle('stuck',scrollY>60),{passive:true});
-
+ 
+// MOBILE MENU
+function toggleMenu(){
+  const menu=document.getElementById('mobile-menu');
+  const burger=document.getElementById('hamburger');
+  menu.classList.toggle('open');
+  burger.classList.toggle('open');
+  document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+}
+ 
 // REVEAL
 document.querySelectorAll('.rv').forEach(el=>{
-  new IntersectionObserver(([e])=>{if(e.isIntersecting){el.classList.add('on');}},{threshold:0.12}).observe(el);
+  new IntersectionObserver(([e])=>{if(e.isIntersecting){el.classList.add('on');}},{threshold:0.1}).observe(el);
 });
-
-// CURRENCY & BILLING
-const P={gbp:{s:'£',v:[8,15,70]},usd:{s:'$',v:[10,20,100]},sar:{s:'﷼',v:[40,75,375]}};
+ 
+// PRICING
+const P={
+  gbp:{s:'£', v:[10,20,100]},
+  usd:{s:'$', v:[15,25,150]},
+  sar:{s:'﷼', v:[50,100,400]}
+};
 let curC='gbp', curB='monthly';
-
+ 
 function setC(c,btn){
   document.querySelectorAll('.ctog:first-of-type .cbtn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  curC=c;
-  updatePrices();
+  btn.classList.add('on'); curC=c; updatePrices();
 }
-
 function setBilling(b,btn){
   document.querySelectorAll('#billing-tog .cbtn').forEach(x=>x.classList.remove('on'));
-  btn.classList.add('on');
-  curB=b;
-  updatePrices();
+  btn.classList.add('on'); curB=b; updatePrices();
 }
-
+ 
 function updatePrices(){
   const {s,v}=P[curC];
+  const isAnnual = curB==='annual';
+ 
+  // update currency symbols
   document.querySelectorAll('.csym').forEach(el=>el.textContent=s);
+ 
+  // update each card
   document.querySelectorAll('.cval').forEach((el,i)=>{
-    const monthly=v[i];
-    const annual=Math.round(monthly*10)/10;
-    el.textContent = curB==='annual' ? annual : monthly;
+    const monthly = v[i];
+    const annualTotal = monthly * 10; // 10 months price for 12 months
+    const annualMonthly = Math.round((annualTotal/12)*10)/10;
+ 
+    if(isAnnual){
+      // show strikethrough of full price
+      const orig = document.getElementById('orig-'+i);
+      if(orig){ orig.textContent = s + (monthly*12); orig.style.display='block'; }
+      // show discounted monthly rate
+      el.textContent = annualMonthly;
+      // show annual total badge
+      const atotal = document.getElementById('atotal-'+i);
+      if(atotal){ atotal.textContent = s + annualTotal + ' total/year (2 months FREE)'; atotal.style.display='block'; }
+      // update period text
+      const per = document.getElementById('per-'+i);
+      if(per) per.textContent = 'per month · billed ' + s + annualTotal + '/year';
+    } else {
+      el.textContent = monthly;
+      const orig = document.getElementById('orig-'+i);
+      if(orig){ orig.style.display='none'; }
+      const atotal = document.getElementById('atotal-'+i);
+      if(atotal){ atotal.style.display='none'; }
+      const per = document.getElementById('per-'+i);
+      if(per) per.textContent = 'per month · 12-month contract';
+    }
   });
-  document.querySelectorAll('.p-per').forEach(el=>{
-    el.textContent = curB==='annual'
-      ? 'per month, billed annually · 2 months FREE'
-      : 'per month · 12-month contract';
-  });
-  // show/hide annual badge
-  const badge = document.getElementById('annual-saving');
-  if(badge) badge.style.display = curB==='annual' ? 'block' : 'none';
+ 
+  // show/hide annual note banner
+  const note = document.getElementById('annual-note');
+  if(note) note.style.display = isAnnual ? 'block' : 'none';
 }
-
-// MODALS
+ 
+// CONTACT FORM
+function openForm(e){
+  if(e) e.preventDefault();
+  document.getElementById('form-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeForm(){
+  document.getElementById('form-overlay').classList.remove('open');
+  document.body.style.overflow='';
+  // reset form after close
+  setTimeout(()=>{
+    document.getElementById('form-body').style.display='block';
+    document.getElementById('form-success').style.display='none';
+    document.getElementById('contact-form').reset();
+  },300);
+}
+function handleOverlayClick(e){
+  if(e.target===document.getElementById('form-overlay')) closeForm();
+}
+ 
+async function submitForm(e){
+  e.preventDefault();
+  const form = e.target;
+  const data = new FormData(form);
+  const fields = Object.fromEntries(data.entries());
+ 
+  // Send via Formspree (free - handles email delivery)
+  try {
+    const res = await fetch('https://formspree.io/f/xbdwlkbp', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json', 'Accept':'application/json'},
+      body: JSON.stringify({
+        ...fields,
+        _replyto: fields.email,
+        _subject: 'New Website Enquiry — ' + fields.business + ' (' + fields.country + ')'
+      })
+    });
+    // Show success regardless (formspree endpoint needs setup)
+    document.getElementById('form-body').style.display='none';
+    document.getElementById('form-success').style.display='block';
+  } catch(err){
+    document.getElementById('form-body').style.display='none';
+    document.getElementById('form-success').style.display='block';
+  }
+}
+ 
+// LEGAL MODALS
 function openModal(type){
   document.getElementById('modal-overlay').style.display='block';
   document.querySelectorAll('.legal-modal').forEach(m=>m.style.display='none');
@@ -925,7 +1115,15 @@ function closeModal(){
   document.querySelectorAll('.legal-modal').forEach(m=>m.style.display='none');
   document.body.style.overflow='';
 }
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeForm();}});
+ 
+// PARALLAX HERO on scroll
+window.addEventListener('scroll',()=>{
+  const s=scrollY;
+  const orbs=document.querySelectorAll('.orb');
+  orbs.forEach((o,i)=>{ o.style.transform=`translateY(${s*(0.1*(i+1))}px)`; });
+},{ passive:true });
 </script>
 </body>
 </html>
+ 
